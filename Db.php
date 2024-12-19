@@ -13,20 +13,36 @@ class Database{
             die("connection failed".$this->conn->connect_error);
         }
     }
-    public function insert($table,$data=array()){
-        if($this->tableExists($table)){
-            $columns = implode(", ",array_keys($data));
-            $values = implode(", ",$data);
-            $query ="INSERT INTO $table ($columns) VALUES ($values)";
-            if($this->mysqli->prepare($query)){
-                array_push($this->result,$this->mysqli->insert_id);
-                return true;
-            }else{
-                array_push($this->result,$this->mysqli->error);
-                return false;
-            }
-        }else{
-            array_push($this->result."can't insert data into this table");
+    public function insert($table, $data) {
+        if (!$this->tableExists($table)) {
+            return "Table does not exist.";
+        }
+
+        // Generate slug if a "name" field exists
+        if (isset($data['name'])) {
+            $data['slug'] = $this->generateSlug($data['name']);
+        }
+
+        $columns = implode(", ", array_keys($data));
+        $placeholders = implode(", ", array_fill(0, count($data), '?'));
+        $values = array_values($data);
+
+        $query = "INSERT INTO $table ($columns) VALUES ($placeholders)";
+        $stmt = $this->conn->prepare($query);
+
+        if (!$stmt) {
+            die("Statement preparation failed: " . $this->conn->error);
+        }
+
+        $types = str_repeat('s', count($values)); // Assuming all values are strings for simplicity
+        $stmt->bind_param($types, ...$values);
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            return "Record inserted successfully.";
+        } else {
+            $stmt->close();
+            return "Error inserting record: " . $this->conn->error;
         }
     }
     public function getConnection(){
@@ -35,17 +51,21 @@ class Database{
     public function closeConnection(){
         $this->conn->close();
     }
-    private function tableExists($table){
-        $query ="SHOW TABLES FROM $this->dbName LIKE '$table'";
-        $stmt= $this->conn->prepare($query);
-        if($tableInDb){
-            if($tableInDb->num_rows==1){
-                return true;
-            }else{
-                array_push($this->result,$table."does not exist in this database.");
-                return false;
-            }
+    private function tableExists($table) {
+        $query = "SHOW TABLES FROM `$this->dbName` LIKE ?";
+        $stmt = $this->conn->prepare($query);
+
+        if (!$stmt) {
+            die("Statement preparation failed: " . $this->conn->error);
         }
+
+        $stmt->bind_param("s", $table);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $exists = $result->num_rows > 0;
+
+        $stmt->close();
+        return $exists;
     }
     // generating slug //
     private function generateSlug($string) {
