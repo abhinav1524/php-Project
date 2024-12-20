@@ -1,7 +1,27 @@
 <?php 
 session_start(); 
+require_once '../../Db.php';
 // Check if user is logged in
 $isLoggedIn = isset($_SESSION['user']);
+$id = $_GET['id'] ?? ''; // Get the ID from the URL
+if (empty($id)) {
+    $_SESSION['error'] = "ID is missing.";
+    header("Location: ./index.php");
+    exit();
+}
+
+// Fetch the category using the getOne method
+$db = new Database();
+$category = $db->getOne('categories', ['id' => $id]); // Fetch the category by ID
+//  echo "<pre>";
+//  print_r($category);
+//  die();
+//  echo "</pre>";
+if (!$category) {
+    $_SESSION['error'] = "Category not found or invalid request.";
+    header("Location: ./index.php");
+    exit();
+}
 ?> 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,10 +40,10 @@ $isLoggedIn = isset($_SESSION['user']);
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.6/swiper-bundle.min.css" />
     <link rel="stylesheet" href="../../style.css" />
-    <title>Category</title>
+    <title>Edit</title>
 </head>
 <body>
-     <header class="fixed-top">
+<header class="fixed-top">
       <nav class="navbar navbar-expand-lg px-5" id="navbar">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">Navbar</a>
@@ -70,27 +90,23 @@ $isLoggedIn = isset($_SESSION['user']);
     </header>
      <div class="container" style="margin-top:100px">
         <h1 class="text-center text-capitalize">this is the category of admin</h1>
-        <div class="d-flex justify-content-end mb-5">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Add Category
-          </button>
+        <div class="d-flex justify-content-center align-items-center mb-5">
+            <div>
+            <?php if (isset($category) && !empty($category)): ?>
+            <form action="category.php" method="post">
+          <div>
+            <label for="categoryname" class="form-label">Category Name</label>
+            <input class="form-control" type="text" name="name" id="categoryname" value="<?php echo htmlspecialchars($category['name']); ?>" required>
+          </div>
+          <div class="mt-2">
+            <button type="submit" class="p-2 btn btn-primary">update Category</button>
         </div>
-      <table class="table table-striped">
-      <thead class="table-dark">
-        <tr>
-          <th>S.no</th>
-          <th>Category</th>
-          <th>Slug</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="table-body"></tbody>
-    </table>
-    <nav>
-      <ul class="pagination justify-content-center" id="pagination">
-        <!-- Pagination items will be inserted here dynamically -->
-      </ul>
-    </nav>
+        </form>
+        <?php else: ?>
+    <p>Category not found or invalid request.</p>
+<?php endif; ?>
+            </div>
+        </div>
     </div>
 <footer class="fixed-bottom">
       <p class="text-center">all copyright reserve to Abhinav</p>
@@ -100,27 +116,6 @@ $isLoggedIn = isset($_SESSION['user']);
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"></script>      
-      <!-- model  -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="category.php" method="post">
-          <div class="modal-body">
-            <label for="categoryname" class="form-label">Category Name</label>
-            <input class="form-control" type="text" name="name" id="categoryname" required>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
-          </div>
-              </form>
-    </div>
-  </div>
-</div>
+      crossorigin="anonymous"></script>           
 </body>
 </html>

@@ -75,12 +75,13 @@ let data = []; // Placeholder for fetched data
 // Function to fetch data from the server
 async function fetchData(tableName) {
   try {
-    console.log(`Fetching data for table: ${tableName}`);
-    const response = await fetch(`db.php?table=${tableName}`); // Fetch data from the backend
+    // console.log(`Fetching data for table: ${tableName}`);
+    const response = await fetch(`../../Db.php?table=${tableName}`); // Fetch data from the backend
     if (!response.ok) {
       throw new Error("Failed to fetch data");
     }
     const jsonData = await response.json(); // Parse JSON response
+    console.log(jsonData); //
 
     if (jsonData.error) {
       console.error("Error:", jsonData.error);
@@ -109,12 +110,12 @@ function displayTable(data, page) {
             <td style="background-color:transparent">${item.id}</td>
             <td style="background-color:transparent">${item.name}</td>
             <td style="background-color:transparent">${item.slug}</td>
-            <td><td style="background-color:transparent">
+            <td style="background-color:transparent">
                 <div class="d-flex justify-content-around align-items-center">
-                     <a href="#" class="btn btn-warning edit-btn" data-id="<?= $category['id'] ?>">Edit</a>
+                     <a href="update.php?id=${item.id}" class="btn btn-warning edit-btn" data-id="<?= $category['id'] ?>">Edit</a>
                     <a href="#" class="btn btn-danger delete-btn" data-id="<?= $category['id'] ?>">Delete</a>
                 </div>
-            </td></td>
+            </td>
           </tr>
         `;
     tableBody.innerHTML += row;

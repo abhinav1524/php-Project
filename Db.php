@@ -18,7 +18,6 @@ class Database{
     public function getAllData($table) {
         $table = $this->conn->real_escape_string($table); // Prevent SQL injection
         $query = "SELECT * FROM `$table`";
-
         $result = $this->conn->query($query);
 
         if ($result) {
@@ -45,17 +44,13 @@ class Database{
         $columns = implode(", ", array_keys($data));
         $placeholders = implode(", ", array_fill(0, count($data), '?'));
         $values = array_values($data);
-
         $query = "INSERT INTO $table ($columns) VALUES ($placeholders)";
         $stmt = $this->conn->prepare($query);
-
         if (!$stmt) {
             die("Statement preparation failed: " . $this->conn->error);
         }
-
         $types = str_repeat('s', count($values)); // Assuming all values are strings for simplicity
         $stmt->bind_param($types, ...$values);
-
         if ($stmt->execute()) {
             $stmt->close();
             return "Record inserted successfully.";
@@ -64,6 +59,58 @@ class Database{
             return "Error inserting record: " . $this->conn->error;
         }
     }
+    // getting the old data to update //
+    public function getOne($table, $conditions) {
+        $table = $this->conn->real_escape_string($table); // Prevent SQL injection
+        $whereClause = ''; // Initialize where clause
+        $firstCondition = true;
+    
+        foreach ($conditions as $key => $value) {
+            $value = $this->conn->real_escape_string($value); // Prevent SQL injection
+            if (!$firstCondition) {
+                $whereClause .= ' AND ';
+            }
+            $whereClause .= "`$key` = '$value'";
+            $firstCondition = false;
+        }
+    
+        $query = "SELECT * FROM `$table` WHERE $whereClause LIMIT 1";
+        $result = $this->conn->query($query);
+    
+        if ($result && $result->num_rows > 0) {
+            return $result->fetch_assoc(); // Return the fetched row as an associative array
+        } else {
+            return null; // Return null if no record is found
+        }
+    }
+    
+    
+    // updating values in database //
+    public function update($table, $data, $where) {
+        $table = $this->conn->real_escape_string($table);
+        $whereKey = array_keys($where)[0];
+        $whereValue = $this->conn->real_escape_string($where[$whereKey]);
+    
+        $updates = [];
+        foreach ($data as $column => $value) {
+            $column = $this->conn->real_escape_string($column);
+            $value = $this->conn->real_escape_string($value);
+            $updates[] = "`$column` = '$value'";
+        }
+    
+        $query = "UPDATE `$table` SET " . implode(', ', $updates) . " WHERE `$whereKey` = '$whereValue'";
+        echo "SQL Query: $query<br>";
+    echo "Data being passed: <pre>";
+    print_r($data);
+    echo "</pre>";
+        if ($this->conn->query($query)) {
+            return json_encode(["success" => true, "message" => "Record updated successfully."]);
+        } else {
+            return json_encode(["success" => false, "error" => "Error updating record: " . $this->conn->error]);
+        }
+    }
+    
+    
     public function getConnection(){
         return $this->conn;
     }
@@ -116,8 +163,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['table'])) {
 
     $tableName = $_GET['table'];
     echo $db->getAllData($tableName); // Fetch and return table data in JSON format
-
-    $db->closeConnection(); // Close the connection
     exit;
 }
 ?>
