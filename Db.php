@@ -13,6 +13,25 @@ class Database{
             die("connection failed".$this->conn->connect_error);
         }
     }
+
+    // getting the data //
+    public function getAllData($table) {
+        $table = $this->conn->real_escape_string($table); // Prevent SQL injection
+        $query = "SELECT * FROM `$table`";
+
+        $result = $this->conn->query($query);
+
+        if ($result) {
+            $data = [];
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            return json_encode($data); // Convert the result to JSON format
+        } else {
+            return json_encode(["error" => "Query failed: " . $this->conn->error]);
+        }
+    }
+    // inserting value in database
     public function insert($table, $data) {
         if (!$this->tableExists($table)) {
             return "Table does not exist.";
@@ -52,21 +71,19 @@ class Database{
         $this->conn->close();
     }
     private function tableExists($table) {
-        $query = "SHOW TABLES FROM `$this->dbName` LIKE ?";
-        $stmt = $this->conn->prepare($query);
+    $table = $this->conn->real_escape_string($table); // Sanitize table name to prevent SQL injection
+    $query = "SHOW TABLES FROM `$this->dbName` LIKE '$table'";
+    $result = $this->conn->query($query);
 
-        if (!$stmt) {
-            die("Statement preparation failed: " . $this->conn->error);
-        }
-
-        $stmt->bind_param("s", $table);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $exists = $result->num_rows > 0;
-
-        $stmt->close();
-        return $exists;
+    if (!$result) {
+        die("Query execution failed: " . $this->conn->error);
     }
+
+    $exists = $result->num_rows > 0;
+    $result->free(); // Free the result set memory
+
+    return $exists;
+}
     // generating slug //
     private function generateSlug($string) {
         $slug = strtolower($string); // Convert to lowercase
@@ -89,5 +106,18 @@ class Database{
             return false;
         }
     }
+}
+// hitting the api request to get data and parse it into a json format //
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['table'])) {
+    // Create a new instance of the Database class
+    $db = new Database("localhost", "root", "", "blog");
+
+    header('Content-Type: application/json'); // Set JSON header
+
+    $tableName = $_GET['table'];
+    echo $db->getAllData($tableName); // Fetch and return table data in JSON format
+
+    $db->closeConnection(); // Close the connection
+    exit;
 }
 ?>

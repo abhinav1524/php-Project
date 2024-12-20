@@ -58,9 +58,9 @@ $isLoggedIn = isset($_SESSION['user']);
               </li>
               <li class="nav-item">
                 <?php if ($isLoggedIn): ?>
-              <a href="../logout.php" class="nav-link">Logout</a>
+              <a href="../../logout.php" class="nav-link">Logout</a>
               <?php else: ?>
-              <a href="../login.php" class="nav-link">Login</a>
+              <a href="../../login.php" class="nav-link">Login</a>
               <?php endif; ?>
               </li>
             </ul>
@@ -85,20 +85,7 @@ $isLoggedIn = isset($_SESSION['user']);
         </tr>
       </thead>
       <tbody id="table-body">
-        <?php 
-        foreach ($categories as $index => $category): ?>
-        <tr class="table_body">
-            <td style="background-color:transparent"><?= $category['id'] ?></td>
-            <td style="background-color:transparent"><?= htmlspecialchars($category['name']) ?></td>
-            <td style="background-color:transparent"><?= htmlspecialchars($category['slug']) ?></td>
-            <td style="background-color:transparent">
-                <div class="d-flex justify-content-around align-items-center">
-                     <a href="#" class="btn btn-warning edit-btn" data-id="<?= $category['id'] ?>">Edit</a>
-                    <a href="#" class="btn btn-danger delete-btn" data-id="<?= $category['id'] ?>">Delete</a>
-                </div>
-            </td>
-        </tr>
-        <?php endforeach; ?>
+       
       </tbody>
     </table>
     <nav>
@@ -137,30 +124,5 @@ $isLoggedIn = isset($_SESSION['user']);
     </div>
   </div>
 </div>
-<script>
-    $(document).on('click', '.edit-btn', function(e) {
-        e.preventDefault();
-        let categoryId = $(this).data('id');
-        $('#category-id').val(categoryId);
-        $('#exampleModal').modal('show'); // Show the modal
-    });
-
-    // Delete button click
-    $(document).on('click', '.delete-btn', function(e) {
-        e.preventDefault();
-        let categoryId = $(this).data('id');
-        if (confirm('Are you sure you want to delete this category?')) {
-            // Perform AJAX request to delete
-            $.ajax({
-                url: 'category.php',
-                method: 'POST',
-                data: { id: categoryId, action: 'delete' },
-                success: function(response) {
-                    location.reload(); // Reload the page after deletion
-                }
-            });
-        }
-    });
-</script>
 </body>
 </html>

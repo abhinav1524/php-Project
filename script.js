@@ -68,57 +68,34 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // table js //
-const data = [
-  { id: 1, name: "John Doe", email: "john@example.com", phone: "123-456-7890" },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    phone: "098-765-4321",
-  },
-  {
-    id: 3,
-    name: "Mike Johnson",
-    email: "mike@example.com",
-    phone: "111-222-3333",
-  },
-  {
-    id: 4,
-    name: "Sara Wilson",
-    email: "sara@example.com",
-    phone: "444-555-6666",
-  },
-  { id: 5, name: "Tom Brown", email: "tom@example.com", phone: "777-888-9999" },
-  {
-    id: 6,
-    name: "Emily Davis",
-    email: "emily@example.com",
-    phone: "000-123-4567",
-  },
-  {
-    id: 7,
-    name: "Chris Green",
-    email: "chris@example.com",
-    phone: "321-654-9870",
-  },
-  { id: 8, name: "Anna Lee", email: "anna@example.com", phone: "456-789-0123" },
-  {
-    id: 9,
-    name: "David Clark",
-    email: "david@example.com",
-    phone: "789-012-3456",
-  },
-  {
-    id: 10,
-    name: "Jessica Moore",
-    email: "jessica@example.com",
-    phone: "234-567-8901",
-  },
-];
+let rowsPerPage = 5; // Number of rows to display per page
+let currentPage = 1; // Current page number
+let data = []; // Placeholder for fetched data
 
-const rowsPerPage = 5;
-let currentPage = 1;
+// Function to fetch data from the server
+async function fetchData(tableName) {
+  try {
+    console.log(`Fetching data for table: ${tableName}`);
+    const response = await fetch(`db.php?table=${tableName}`); // Fetch data from the backend
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    const jsonData = await response.json(); // Parse JSON response
 
+    if (jsonData.error) {
+      console.error("Error:", jsonData.error);
+      return;
+    }
+
+    data = jsonData; // Assign the fetched data to the `data` variable
+    displayTable(data, currentPage); // Display the first page of the data
+    setupPagination(data); // Set up pagination based on the fetched data
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+
+// Function to display the table data
 function displayTable(data, page) {
   const startIndex = (page - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -129,16 +106,22 @@ function displayTable(data, page) {
   paginatedData.forEach((item) => {
     const row = `
           <tr>
-            <td>${item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.email}</td>
-            <td>${item.phone}</td>
+            <td style="background-color:transparent">${item.id}</td>
+            <td style="background-color:transparent">${item.name}</td>
+            <td style="background-color:transparent">${item.slug}</td>
+            <td><td style="background-color:transparent">
+                <div class="d-flex justify-content-around align-items-center">
+                     <a href="#" class="btn btn-warning edit-btn" data-id="<?= $category['id'] ?>">Edit</a>
+                    <a href="#" class="btn btn-danger delete-btn" data-id="<?= $category['id'] ?>">Delete</a>
+                </div>
+            </td></td>
           </tr>
         `;
     tableBody.innerHTML += row;
   });
 }
 
+// Function to set up pagination
 function setupPagination(data) {
   const pagination = document.getElementById("pagination");
   const totalPages = Math.ceil(data.length / rowsPerPage);
@@ -154,12 +137,12 @@ function setupPagination(data) {
   }
 }
 
+// Function to handle page changes
 function changePage(page) {
   currentPage = page;
-  displayTable(data, currentPage);
-  setupPagination(data);
+  displayTable(data, currentPage); // Display the new page
+  setupPagination(data); // Recreate pagination with the active page highlighted
 }
 
-// Initial setup
-displayTable(data, currentPage);
-setupPagination(data);
+// Call fetchData with the table name
+fetchData("categories"); // Replace 'your_table_name' with the actual table name
