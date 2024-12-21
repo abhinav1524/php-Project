@@ -1,6 +1,7 @@
 <?php 
 session_start(); 
 require_once '../../Db.php';
+// require_once "./category.php";
 // Check if user is logged in
 $isLoggedIn = isset($_SESSION['user']);
 $id = $_GET['id'] ?? ''; // Get the ID from the URL
@@ -97,9 +98,10 @@ if (!$category) {
           <div>
             <label for="categoryname" class="form-label">Category Name</label>
             <input class="form-control" type="text" name="name" id="categoryname" value="<?php echo htmlspecialchars($category['name']); ?>" required>
+            <input type="hidden" name="id" value="<?php echo htmlspecialchars($category['id']); ?>">
           </div>
           <div class="mt-2">
-            <button type="submit" class="p-2 btn btn-primary">update Category</button>
+            <button type="submit" name="update" value="true" class="p-2 btn btn-primary">update Category</button>
         </div>
         </form>
         <?php else: ?>

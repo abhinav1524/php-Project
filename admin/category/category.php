@@ -1,14 +1,17 @@
 <?php
 session_start();
 require_once '../../Db.php';
-// checking the url has id or not //
-$id = $_GET['id'] ?? '';
-if (!$id) {
-    $_SESSION['error'] = "ID is missing.";
-    header("Location: ./index.php");
-    exit();
+//getting all data //
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['fetchAll'])) {
+    // Create a new instance of the Database class
+    $db = new Database();
+    $tableName = 'categories';
+    echo $db->getAllData($tableName); // Fetch and return table data in JSON format
+    header('Content-Type: application/json');
+    exit;
 }
-   if($_SERVER['REQUEST_METHOD'] === 'POST'){
+// insert code //
+   if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['insert'])){
     $db =new Database();
     $name =$_POST['name']??'';
     if(empty($name)){
@@ -27,35 +30,46 @@ if (!$id) {
     }
     exit();
    }
-   // update category //
-   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    echo "<pre>";
-    print_r($_POST);
-    echo "</pre>";
-}
-
-$category = $db->getOne('categories', ['id' => $id]);
-
+   // update code //
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
+    $db = new Database();
     $id = $_POST['id'] ?? '';
-    $name = $_POST['name'] ?? '';
-    
+    $name = $_POST['name'] ?? '';  
     // Validate input
     if (empty($id) || empty($name)) {
         $_SESSION['error'] = "ID and Name are required.";
         header("Location: ./index.php");
         exit();
-    }
-    
+    } 
     $data = ['name' => $name]; // Data to update
-    $result = $db->update('categories', $data, ['id' => $id]);
-    
+    $result = $db->update('categories', $data, ['id' => $id]);    
     if ($result === "Record updated successfully") {
         $_SESSION['success'] = "Category updated successfully.";
         header('Location: ./index.php');
     } else {
         $_SESSION['error'] = $result;
         header("Location: ./index.php");
+    }
+    exit();
+}
+ //  delete code //
+ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    // Read and decode the raw JSON input
+    $data = json_decode(file_get_contents('php://input'), true);
+    // Validate the 'id'
+    if (!isset($data['id']) || empty($data['id'])) {
+        echo json_encode(['success' => false, 'error' => 'ID is missing or invalid.']);
+        exit();
+    }
+    $id = intval($data['id']); // Ensuring ID is treated as an integer
+    require_once '../../Db.php';
+    $db = new Database();
+    // Call the delete function
+    $result = $db->delete('categories', ['id' => $id]);
+    if ($result === "Record deleted successfully") {
+        echo json_encode(['success' => true, 'message' => 'Category deleted successfully.']);
+    } else {
+        echo json_encode(['success' => false, 'error' => $result]);
     }
     exit();
 }

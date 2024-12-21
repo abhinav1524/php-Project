@@ -73,10 +73,10 @@ let currentPage = 1; // Current page number
 let data = []; // Placeholder for fetched data
 
 // Function to fetch data from the server
-async function fetchData(tableName) {
+async function fetchData() {
   try {
     // console.log(`Fetching data for table: ${tableName}`);
-    const response = await fetch(`../../Db.php?table=${tableName}`); // Fetch data from the backend
+    const response = await fetch(`../category/category.php?fetchAll=true`); // Fetch data from the backend
     if (!response.ok) {
       throw new Error("Failed to fetch data");
     }
@@ -95,7 +95,8 @@ async function fetchData(tableName) {
     console.error("Error fetching data:", error);
   }
 }
-
+// Call fetchData with the table name
+fetchData();
 // Function to display the table data
 function displayTable(data, page) {
   const startIndex = (page - 1) * rowsPerPage;
@@ -112,8 +113,8 @@ function displayTable(data, page) {
             <td style="background-color:transparent">${item.slug}</td>
             <td style="background-color:transparent">
                 <div class="d-flex justify-content-around align-items-center">
-                     <a href="update.php?id=${item.id}" class="btn btn-warning edit-btn" data-id="<?= $category['id'] ?>">Edit</a>
-                    <a href="#" class="btn btn-danger delete-btn" data-id="<?= $category['id'] ?>">Delete</a>
+                     <a href="update.php?id=${item.id}" class="btn btn-warning edit-btn">Edit</a>
+                    <a href="#" class="btn btn-danger delete-btn" data-id="${item.id}">Delete</a>
                 </div>
             </td>
           </tr>
@@ -121,6 +122,50 @@ function displayTable(data, page) {
     tableBody.innerHTML += row;
   });
 }
+// delete button code //
+document.addEventListener("DOMContentLoaded", () => {
+  const tableBody = document.querySelector("table tbody");
+
+  tableBody.addEventListener("click", async (event) => {
+    if (event.target.classList.contains("delete-btn")) {
+      event.preventDefault();
+
+      const categoryId = event.target.getAttribute("data-id");
+      console.log();
+      const confirmDelete = confirm(
+        "Are you sure you want to delete this category?"
+      );
+
+      if (confirmDelete) {
+        try {
+          const response = await fetch("category.php", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: categoryId }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const result = await response.json();
+
+          if (result.success) {
+            alert(result.message || "Category deleted successfully.");
+            event.target.closest("tr").remove();
+          } else {
+            alert("Error: " + result.error);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred: " + error.message);
+        }
+      }
+    }
+  });
+});
 
 // Function to set up pagination
 function setupPagination(data) {
@@ -144,6 +189,3 @@ function changePage(page) {
   displayTable(data, currentPage); // Display the new page
   setupPagination(data); // Recreate pagination with the active page highlighted
 }
-
-// Call fetchData with the table name
-fetchData("categories"); // Replace 'your_table_name' with the actual table name

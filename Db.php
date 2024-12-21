@@ -87,30 +87,41 @@ class Database{
     
     // updating values in database //
     public function update($table, $data, $where) {
-        $table = $this->conn->real_escape_string($table);
-        $whereKey = array_keys($where)[0];
-        $whereValue = $this->conn->real_escape_string($where[$whereKey]);
-    
-        $updates = [];
-        foreach ($data as $column => $value) {
-            $column = $this->conn->real_escape_string($column);
-            $value = $this->conn->real_escape_string($value);
-            $updates[] = "`$column` = '$value'";
-        }
-    
-        $query = "UPDATE `$table` SET " . implode(', ', $updates) . " WHERE `$whereKey` = '$whereValue'";
-        echo "SQL Query: $query<br>";
-    echo "Data being passed: <pre>";
-    print_r($data);
-    echo "</pre>";
-        if ($this->conn->query($query)) {
-            return json_encode(["success" => true, "message" => "Record updated successfully."]);
-        } else {
-            return json_encode(["success" => false, "error" => "Error updating record: " . $this->conn->error]);
-        }
+    $table = $this->conn->real_escape_string($table);
+    $whereKey = array_keys($where)[0];
+    $whereValue = $this->conn->real_escape_string($where[$whereKey]);
+
+    // Generate slug from the name and add it to the $data array
+    if (isset($data['name'])) {
+        $data['slug'] = $this->generateSlug($data['name']);
     }
-    
-    
+
+    $updates = [];
+    foreach ($data as $column => $value) {
+        $column = $this->conn->real_escape_string($column);
+        $value = $this->conn->real_escape_string($value);
+        $updates[] = "`$column` = '$value'";
+    }
+
+    $query = "UPDATE `$table` SET " . implode(', ', $updates) . " WHERE `$whereKey` = '$whereValue'";
+    if ($this->conn->query($query)) {
+        return json_encode(["success" => true, "message" => "Record updated successfully."]);
+    } else {
+        return json_encode(["success" => false, "error" => "Error updating record: " . $this->conn->error]);
+    }
+}
+// delete code //
+public function delete($table, $where) {
+    $table = $this->conn->real_escape_string($table);
+    $whereKey = array_keys($where)[0];
+    $whereValue = $this->conn->real_escape_string($where[$whereKey]);
+    $query = "DELETE FROM `$table` WHERE `$whereKey` = '$whereValue'";
+    if ($this->conn->query($query)) {
+        return "Record deleted successfully";
+    } else {
+        return "Error deleting record: " . $this->conn->error;
+    }
+}
     public function getConnection(){
         return $this->conn;
     }
@@ -121,14 +132,11 @@ class Database{
     $table = $this->conn->real_escape_string($table); // Sanitize table name to prevent SQL injection
     $query = "SHOW TABLES FROM `$this->dbName` LIKE '$table'";
     $result = $this->conn->query($query);
-
     if (!$result) {
         die("Query execution failed: " . $this->conn->error);
     }
-
     $exists = $result->num_rows > 0;
     $result->free(); // Free the result set memory
-
     return $exists;
 }
     // generating slug //
@@ -153,16 +161,5 @@ class Database{
             return false;
         }
     }
-}
-// hitting the api request to get data and parse it into a json format //
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['table'])) {
-    // Create a new instance of the Database class
-    $db = new Database("localhost", "root", "", "blog");
-
-    header('Content-Type: application/json'); // Set JSON header
-
-    $tableName = $_GET['table'];
-    echo $db->getAllData($tableName); // Fetch and return table data in JSON format
-    exit;
 }
 ?>
