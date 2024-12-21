@@ -54,7 +54,7 @@ $isLoggedIn = isset($_SESSION['user']);
                 <a class="nav-link" href="category/index.php">Category</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Tags</a>
+                <a class="nav-link" href="tag/index.php">Tags</a>
               </li>
               <li class="nav-item">
                 <?php if ($isLoggedIn): ?>

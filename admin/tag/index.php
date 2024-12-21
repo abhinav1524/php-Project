@@ -2,6 +2,19 @@
 session_start(); 
 // Check if user is logged in
 $isLoggedIn = isset($_SESSION['user']);
+if (!isset($_SESSION["user"])) {
+    echo "User not logged in. Redirecting...";
+    header("Location: ./index.php");
+    exit;
+}
+
+// Check if the user is an admin
+$user = $_SESSION["user"];
+if ($user["role"] !== "admin") {
+    echo "Access denied. Redirecting...";
+    header("Location: ./index.php");
+    exit;
+}
 ?> 
 <!DOCTYPE html>
 <html lang="en">
@@ -51,10 +64,10 @@ $isLoggedIn = isset($_SESSION['user']);
                 <a class="nav-link" href="#">Posts</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="category.php">Category</a>
+                <a class="nav-link" href="../category/index.php">Category</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="../tag/index.php">Tags</a>
+                <a class="nav-link" href="tags.php">Tags</a>
               </li>
               <li class="nav-item">
                 <?php if ($isLoggedIn): ?>
@@ -69,22 +82,22 @@ $isLoggedIn = isset($_SESSION['user']);
       </nav>
     </header>
      <div class="container" style="margin-top:100px">
-        <h1 class="text-center text-capitalize">this is the category of admin</h1>
+        <h1 class="text-center text-capitalize">this is the tag of admin</h1>
         <div class="d-flex justify-content-end mb-5">
           <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Add Category
+          Add Tag
           </button>
         </div>
       <table class="table table-striped">
       <thead class="table-dark">
         <tr>
           <th>S.no</th>
-          <th>Category</th>
+          <th>Tag</th>
           <th>Slug</th>
           <th>Action</th>
         </tr>
       </thead>
-      <tbody id="table-body"></tbody>
+      <tbody id="tag-table-body"></tbody>
     </table>
     <nav>
       <ul class="pagination justify-content-center" id="pagination">
@@ -106,13 +119,13 @@ $isLoggedIn = isset($_SESSION['user']);
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Category</h1>
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Tag/h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form action="category.php" method="post">
+      <form action="tag.php" method="post">
           <div class="modal-body">
-            <label for="categoryname" class="form-label">Category Name</label>
-            <input class="form-control" type="text" name="name" id="categoryname" required>
+            <label for="tagname" class="form-label">Tag Name</label>
+            <input class="form-control" type="text" name="name" id="tagname" required>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
