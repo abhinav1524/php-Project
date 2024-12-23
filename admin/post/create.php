@@ -1,5 +1,6 @@
 <?php 
 session_start(); 
+require_once '../../Db.php';
 // Check if user is logged in
 $isLoggedIn = isset($_SESSION['user']);
 if (!isset($_SESSION["user"])) {
@@ -14,6 +15,17 @@ if ($user["role"] !== "admin") {
     echo "Access denied. Redirecting...";
     header("Location: ./index.php");
     exit;
+}
+$db = new Database();
+$categories = $db->getData('categories'); // Fetch the category by ID
+//  echo "<pre>";
+//  print_r($categories);
+//  die();
+//  echo "</pre>";
+if (!$categories) {
+    $_SESSION['error'] = "posts not found or invalid request.";
+    header("Location: ./index.php");
+    exit();
 }
 ?> 
 <!DOCTYPE html>
@@ -33,7 +45,7 @@ if ($user["role"] !== "admin") {
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.6/swiper-bundle.min.css" />
     <link rel="stylesheet" href="../../style.css" />
-    <title>Tag</title>
+    <title>Create Post</title>
 </head>
 <body>
      <header class="fixed-top">
@@ -61,7 +73,7 @@ if ($user["role"] !== "admin") {
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="../post/index.php">Posts</a>
+                <a class="nav-link" href="#">Posts</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="../category/index.php">Category</a>
@@ -81,59 +93,57 @@ if ($user["role"] !== "admin") {
         </div>
       </nav>
     </header>
-     <div class="container" style="margin-top:100px">
-        <h1 class="text-center text-capitalize">this is the tag of admin</h1>
-        <div class="d-flex justify-content-end mb-5">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Add Tag
-          </button>
+     <div class="container" style="margin-top:100px; margin-bottom:50px">
+        <h1 class="text-center text-capitalize">this is the Posts of admin</h1>
+        <div class="row">
+            <div class="col-12">
+                <form action="post.php" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" style="" name="title" class="form-control" id="title"/>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea type="text" name="content" class="form-control" id="content"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="content" class="form-label">Category</label>
+                    <select name="category" id="category" class="form-select" aria-label="Default select example">
+                        <option value="">Select the category</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?php echo htmlspecialchars($category['id']); ?>">
+                                <?php echo htmlspecialchars($category['name']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="image" class="form-label">Feature Image</label>
+                    <input type="file" name="image" class="form-control" id="image"/>
+                </div>
+                <button type="submit" name="insert" value="true" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
         </div>
-      <table class="table table-striped">
-      <thead class="table-dark">
-        <tr>
-          <th>S.no</th>
-          <th>Tag</th>
-          <th>Slug</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="tag-table-body"></tbody>
-    </table>
-    <nav>
-      <ul class="pagination justify-content-center" id="pagination">
-        <!-- Pagination items will be inserted here dynamically -->
-      </ul>
-    </nav>
     </div>
 <footer class="fixed-bottom">
       <p class="text-center">all copyright reserve to Abhinav</p>
     </footer>
+    <script src="https://cdn.tiny.cloud/1/r8jon8h8qgvna4rm62vzmjuf0g4qrgszc0ucjrcin7t3n4s0/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+  tinymce.init({
+    selector: '#content', // The ID of the textarea to convert into a rich text editor
+    plugins: 'advlist autolink lists link image charmap preview anchor',
+    toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+    height: 500,
+    menubar: false,
+  });
+</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.6/swiper-bundle.min.js"></script>
     <script src="../../script.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"></script>      
-      <!-- model  -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Tag/h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="tag.php" method="post">
-          <div class="modal-body">
-            <label for="tagname" class="form-label">Tag Name</label>
-            <input class="form-control" type="text" name="name" id="tagname" required>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" name="insert" value="true" class="btn btn-primary">Save changes</button>
-          </div>
-              </form>
-    </div>
-  </div>
-</div>
+      crossorigin="anonymous"></script>
 </body>
 </html>

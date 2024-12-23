@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const navbar = document.getElementById("navbar");
   const toggleDarkMode = document.getElementById("toggleDarkMode");
   const darkModeIcon = document.getElementById("darkModeIcon");
-  const rows = document.querySelectorAll("td");
 
   // Load dark mode preference
   if (localStorage.getItem("dark-mode") === "enabled") {
@@ -113,8 +112,8 @@ function displayTable(data, page) {
             <td style="background-color:transparent">${item.slug}</td>
             <td style="background-color:transparent">
                 <div class="d-flex justify-content-around align-items-center">
-                     <a href="update.php?id=${item.id}" class="btn btn-warning edit-btn">Edit</a>
-                    <a href="#" class="btn btn-danger delete-btn" data-id="${item.id}">Delete</a>
+                     <a href="update.php?id=${item.id}" class="btn btn-warning edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="#" class="btn btn-danger delete-btn" data-id="${item.id}"><i class="fa-solid fa-trash-can"></i></a>
                 </div>
             </td>
           </tr>
@@ -199,7 +198,7 @@ async function fetchTagData() {
       throw new Error("Failed to fetch data");
     }
     const jsonData = await response.json(); // Parse JSON response
-    console.log(jsonData); //
+    // console.log(jsonData); //
 
     if (jsonData.error) {
       console.error("Error:", jsonData.error);
@@ -231,8 +230,8 @@ function displayTagTable(data, page) {
             <td style="background-color:transparent">${item.slug}</td>
             <td style="background-color:transparent">
                 <div class="d-flex justify-content-around align-items-center">
-                     <a href="update.php?id=${item.id}" class="btn btn-warning edit-btn">Edit</a>
-                    <a href="#" class="btn btn-danger delete-tag-btn" data-id="${item.id}">Delete</a>
+                     <a href="update.php?id=${item.id}" class="btn btn-warning edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="#" class="btn btn-danger delete-tag-btn" data-id="${item.id}"><i class="fa-solid fa-trash-can"></i></a>
                 </div>
             </td>
           </tr>
@@ -271,6 +270,107 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (result.success) {
             alert(result.message || "Tag deleted successfully.");
+            event.target.closest("tr").remove(); // Remove the table row
+          } else {
+            alert("Error: " + result.error);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred: " + error.message);
+        }
+      }
+    }
+  });
+});
+
+// fetching the post data //
+async function fetchPostData() {
+  let postData = [];
+  try {
+    const response = await fetch(`../post/post.php?fetchAll=true`); // Fetch data from the backend
+    if (!response.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    const jsonData = await response.json(); // Parse JSON response
+    console.log(jsonData); //
+
+    if (jsonData.error) {
+      console.error("Error:", jsonData.error);
+      return;
+    }
+
+    postData = jsonData; // Assign the fetched data to the `data` variable
+    displayPostTable(postData, currentPage); // Display the first page of the data
+    setupPagination(postData); // Set up pagination based on the fetched data
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
+// Call fetchData with the table name
+fetchPostData();
+// Function to display the table data
+function displayPostTable(data, page) {
+  const startIndex = (page - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  const paginatedData = data.slice(startIndex, endIndex);
+  // console.log(paginatedData);
+  const tableBody = document.getElementById("posts-table-body");
+  tableBody.innerHTML = "";
+  paginatedData.forEach((item) => {
+    const normalizedImagePath = `../../images/${item.image.split("\\").pop()}`;
+    const row = `
+          <tr>
+            <td style="background-color:transparent">${item.id}</td>
+            <td style="background-color:transparent">${item.title}</td>
+            <td style="background-color:transparent">${item.slug}</td>
+            <td style="background-color:transparent">${item.content}</td>
+            <td style="background-color:transparent">${item.category_id}</td>
+            <td style="background-color:transparent"><img src ="${normalizedImagePath}" style="max-width: 80px; max-height:80px"/></td>
+            <td style="background-color:transparent">
+                <div class="d-flex justify-content-between align-items-center">
+                     <a href="update.php?id=${item.id}" class="btn btn-warning edit-btn" style="margin-right:8px"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="#" class="btn btn-danger delete-post-btn" data-id="${item.id}"><i class="fa-solid fa-trash-can"></i></a>
+                </div>
+            </td>
+          </tr>
+        `;
+    tableBody.innerHTML += row;
+  });
+}
+
+// delete button for post //
+document.addEventListener("DOMContentLoaded", () => {
+  const tableBody = document.querySelector("table tbody");
+
+  tableBody.addEventListener("click", async (event) => {
+    if (event.target.classList.contains("delete-post-btn")) {
+      // console.log("entered in delte code ");
+      event.preventDefault();
+
+      const postId = event.target.getAttribute("data-id");
+      // console.log(postId);
+      const confirmDelete = confirm(
+        "Are you sure you want to delete this post?"
+      );
+
+      if (confirmDelete) {
+        try {
+          const response = await fetch("post.php", {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: postId }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          console.log(result);
+          if (result.success) {
+            alert(result.message || "Post deleted successfully.");
             event.target.closest("tr").remove(); // Remove the table row
           } else {
             alert("Error: " + result.error);

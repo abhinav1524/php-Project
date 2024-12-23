@@ -7,6 +7,12 @@ if (!isset($_SESSION["user"])) {
     header("Location: ./index.php");
     exit;
 }
+// if (isset($_SESSION["error"])) {
+//     echo "<pre>";
+//     print_r($_SESSION["error"]);
+//     unset($_SESSION['error']);
+//     exit;
+// }
 
 // Check if the user is an admin
 $user = $_SESSION["user"];
@@ -33,7 +39,7 @@ if ($user["role"] !== "admin") {
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.6/swiper-bundle.min.css" />
     <link rel="stylesheet" href="../../style.css" />
-    <title>Tag</title>
+    <title>Posts</title>
 </head>
 <body>
      <header class="fixed-top">
@@ -82,22 +88,25 @@ if ($user["role"] !== "admin") {
       </nav>
     </header>
      <div class="container" style="margin-top:100px">
-        <h1 class="text-center text-capitalize">this is the tag of admin</h1>
+        <h1 class="text-center text-capitalize">this is the Posts of admin</h1>
         <div class="d-flex justify-content-end mb-5">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-          Add Tag
-          </button>
+          <a href="../post/create.php" class="btn btn-primary">
+          Add Post
+          </a>
         </div>
       <table class="table table-striped">
       <thead class="table-dark">
         <tr>
           <th>S.no</th>
-          <th>Tag</th>
+          <th>title</th>
           <th>Slug</th>
+          <th>description</th>
+          <th>category</th>
+          <th>image</th>
           <th>Action</th>
         </tr>
       </thead>
-      <tbody id="tag-table-body"></tbody>
+      <tbody id="posts-table-body"></tbody>
     </table>
     <nav>
       <ul class="pagination justify-content-center" id="pagination">
@@ -113,27 +122,6 @@ if ($user["role"] !== "admin") {
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"></script>      
-      <!-- model  -->
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Tag/h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form action="tag.php" method="post">
-          <div class="modal-body">
-            <label for="tagname" class="form-label">Tag Name</label>
-            <input class="form-control" type="text" name="name" id="tagname" required>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" name="insert" value="true" class="btn btn-primary">Save changes</button>
-          </div>
-              </form>
-    </div>
-  </div>
-</div>
+      crossorigin="anonymous"></script>
 </body>
 </html>

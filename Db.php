@@ -14,7 +14,7 @@ class Database{
         }
     }
 
-    // getting the data //
+    // getting the data in json format  //
     public function getAllData($table) {
         $table = $this->conn->real_escape_string($table); // Prevent SQL injection
         $query = "SELECT * FROM `$table`";
@@ -30,21 +30,43 @@ class Database{
             return json_encode(["error" => "Query failed: " . $this->conn->error]);
         }
     }
+    // get data in array format //
+    public function getData($table) {
+    $table = $this->conn->real_escape_string($table); // Prevent SQL injection
+    $query = "SELECT * FROM `$table`";
+    $result = $this->conn->query($query);
+
+    if ($result) {
+        $data = [];
+        while ($row = $result->fetch_assoc()) {
+            $data[] = $row;
+        }
+        return $data; // Return an array of the result
+    } else {
+        return ["error" => "Query failed: " . $this->conn->error];
+    }
+}
+
     // inserting value in database
     public function insert($table, $data) {
+        // die("come in the insert code in db.php");
         if (!$this->tableExists($table)) {
             return "Table does not exist.";
         }
-
         // Generate slug if a "name" field exists
         if (isset($data['name'])) {
             $data['slug'] = $this->generateSlug($data['name']);
-        }
-
+        }elseif(isset($data['title'])){
+        $data['slug'] = $this->generateSlug($data['title']);
+    }
         $columns = implode(", ", array_keys($data));
         $placeholders = implode(", ", array_fill(0, count($data), '?'));
         $values = array_values($data);
         $query = "INSERT INTO $table ($columns) VALUES ($placeholders)";
+        //  echo "<pre>";
+        //  print_r($query);
+        //  die();
+        //  echo "</pre>";
         $stmt = $this->conn->prepare($query);
         if (!$stmt) {
             die("Statement preparation failed: " . $this->conn->error);
@@ -94,15 +116,15 @@ class Database{
     // Generate slug from the name and add it to the $data array
     if (isset($data['name'])) {
         $data['slug'] = $this->generateSlug($data['name']);
+    }elseif(isset($data['title'])){
+        $data['slug'] = $this->generateSlug($data['title']);
     }
-
     $updates = [];
     foreach ($data as $column => $value) {
         $column = $this->conn->real_escape_string($column);
         $value = $this->conn->real_escape_string($value);
         $updates[] = "`$column` = '$value'";
     }
-
     $query = "UPDATE `$table` SET " . implode(', ', $updates) . " WHERE `$whereKey` = '$whereValue'";
     if ($this->conn->query($query)) {
         return json_encode(["success" => true, "message" => "Record updated successfully."]);
