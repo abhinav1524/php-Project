@@ -15,9 +15,11 @@ class Database{
     }
 
     // getting the data in json format  //
-    public function getAllData($table) {
+    public function getAllData($table,$join=null,$select="*"){
         $table = $this->conn->real_escape_string($table); // Prevent SQL injection
-        $query = "SELECT * FROM `$table`";
+        // If a join is provided, append it to the query
+        $joinQuery = $join ? " $join" : '';
+        $query = "SELECT $select FROM `$table`".$joinQuery;
         $result = $this->conn->query($query);
 
         if ($result) {
@@ -31,9 +33,10 @@ class Database{
         }
     }
     // get data in array format //
-    public function getData($table) {
+    public function getData($table,$join=null,$select="*") {
     $table = $this->conn->real_escape_string($table); // Prevent SQL injection
-    $query = "SELECT * FROM `$table`";
+    $joinQuery = $join ? " $join" : '';
+    $query = "SELECT $select FROM `$table`".$joinQuery;
     $result = $this->conn->query($query);
 
     if ($result) {

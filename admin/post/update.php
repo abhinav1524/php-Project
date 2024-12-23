@@ -115,6 +115,10 @@ if (!$categories) {
                     <input type="text" style="" name="title" class="form-control" id="title" value="<?php echo htmlspecialchars($posts['title']); ?>"/>
                 </div>
                 <div class="mb-3">
+                    <label for="title" class="form-label">Author</label>
+                    <input type="text" style="" name="author" class="form-control" id="author" value="<?php echo htmlspecialchars($posts['author']); ?>"/>
+                </div>
+                <div class="mb-3">
                     <label for="content" class="form-label">Content</label>
                     <textarea type="text" name="content" class="form-control" id="content"><?php echo htmlspecialchars($posts['content']); ?></textarea>
                 </div>
@@ -123,9 +127,10 @@ if (!$categories) {
                     <select name="category" id="category" class="form-select" aria-label="Default select example">
                         <option value="">Select the category</option>
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?php echo htmlspecialchars($category['id']); ?>">
-                                <?php echo htmlspecialchars($category['name']); ?>
-                            </option>
+                            <option value="<?php echo htmlspecialchars($category['id']); ?>" 
+                    <?php echo ($posts['category_id'] == $category['id']) ? 'selected' : ''; ?>>
+                <?php echo htmlspecialchars($category['name']); ?>
+            </option>
                         <?php endforeach; ?>
                     </select>
                 </div>

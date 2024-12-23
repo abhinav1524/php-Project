@@ -104,16 +104,20 @@ function displayTable(data, page) {
 
   const tableBody = document.getElementById("table-body");
   tableBody.innerHTML = "";
-  paginatedData.forEach((item) => {
+  paginatedData.forEach((item, key) => {
     const row = `
           <tr>
-            <td style="background-color:transparent">${item.id}</td>
+            <td style="background-color:transparent">${key + 1}</td>
             <td style="background-color:transparent">${item.name}</td>
             <td style="background-color:transparent">${item.slug}</td>
             <td style="background-color:transparent">
                 <div class="d-flex justify-content-around align-items-center">
-                     <a href="update.php?id=${item.id}" class="btn btn-warning edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <a href="#" class="btn btn-danger delete-btn" data-id="${item.id}"><i class="fa-solid fa-trash-can"></i></a>
+                     <a href="update.php?id=${
+                       item.id
+                     }" class="btn btn-warning edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="#" class="btn btn-danger delete-btn" data-id="${
+                      item.id
+                    }"><i class="fa-solid fa-trash-can"></i></a>
                 </div>
             </td>
           </tr>
@@ -222,16 +226,20 @@ function displayTagTable(data, page) {
   // console.log(paginatedData);
   const tableBody = document.getElementById("tag-table-body");
   tableBody.innerHTML = "";
-  paginatedData.forEach((item) => {
+  paginatedData.forEach((item, key) => {
     const row = `
           <tr>
-            <td style="background-color:transparent">${item.id}</td>
+            <td style="background-color:transparent">${key + 1}</td>
             <td style="background-color:transparent">${item.name}</td>
             <td style="background-color:transparent">${item.slug}</td>
             <td style="background-color:transparent">
                 <div class="d-flex justify-content-around align-items-center">
-                     <a href="update.php?id=${item.id}" class="btn btn-warning edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <a href="#" class="btn btn-danger delete-tag-btn" data-id="${item.id}"><i class="fa-solid fa-trash-can"></i></a>
+                     <a href="update.php?id=${
+                       item.id
+                     }" class="btn btn-warning edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="#" class="btn btn-danger delete-tag-btn" data-id="${
+                      item.id
+                    }"><i class="fa-solid fa-trash-can"></i></a>
                 </div>
             </td>
           </tr>
@@ -316,20 +324,25 @@ function displayPostTable(data, page) {
   // console.log(paginatedData);
   const tableBody = document.getElementById("posts-table-body");
   tableBody.innerHTML = "";
-  paginatedData.forEach((item) => {
+  paginatedData.forEach((item, key) => {
     const normalizedImagePath = `../../images/${item.image.split("\\").pop()}`;
     const row = `
           <tr>
-            <td style="background-color:transparent">${item.id}</td>
+            <td style="background-color:transparent">${key + 1}</td>
             <td style="background-color:transparent">${item.title}</td>
             <td style="background-color:transparent">${item.slug}</td>
+            <td style="background-color:transparent">${item.author}</td>
             <td style="background-color:transparent">${item.content}</td>
-            <td style="background-color:transparent">${item.category_id}</td>
+            <td style="background-color:transparent">${item.category_name}</td>
             <td style="background-color:transparent"><img src ="${normalizedImagePath}" style="max-width: 80px; max-height:80px"/></td>
             <td style="background-color:transparent">
                 <div class="d-flex justify-content-between align-items-center">
-                     <a href="update.php?id=${item.id}" class="btn btn-warning edit-btn" style="margin-right:8px"><i class="fa-solid fa-pen-to-square"></i></a>
-                    <a href="#" class="btn btn-danger delete-post-btn" data-id="${item.id}"><i class="fa-solid fa-trash-can"></i></a>
+                     <a href="update.php?id=${
+                       item.id
+                     }" class="btn btn-warning edit-btn" style="margin-right:8px"><i class="fa-solid fa-pen-to-square"></i></a>
+                    <a href="#" class="btn btn-danger delete-post-btn" data-id="${
+                      item.id
+                    }"><i class="fa-solid fa-trash-can"></i></a>
                 </div>
             </td>
           </tr>

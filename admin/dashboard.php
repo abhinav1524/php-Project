@@ -48,7 +48,7 @@ $isLoggedIn = isset($_SESSION['user']);
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Posts</a>
+                <a class="nav-link" href="post/index.php">Posts</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="category/index.php">Category</a>

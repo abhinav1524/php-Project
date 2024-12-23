@@ -13,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['fetchAll'])) {
     // Create a new instance of the Database class
     $db = new Database();
     $tableName = 'posts';
-    echo $db->getAllData($tableName); // Fetch and return table data in JSON format
+    $join = "LEFT JOIN categories c ON posts.category_id = c.id";
+    echo $db->getAllData($tableName,$join,'posts.*,c.name AS category_name'); // Fetch and return table data in JSON format
     header('Content-Type: application/json');
     exit;
 }
@@ -24,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['fetchAll'])) {
     $title =$_POST['title']??'';
     $content =$_POST['content']??'';
     $category =$_POST['category']??'';
+    $author =$_POST['author']??'';
     $image =$_FILES['image']??null;
     // echo "<pre>";
     // print_r($title);
@@ -48,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['fetchAll'])) {
             'title'=>$title,
             'content'=>$content,
             'category_id'=>$category,
+            'author'=>$author,
             'image'=>$targetFilePath,
         ];
         $result=$db->insert('posts', $data);
@@ -71,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $title = $_POST['title'] ?? '';
     $content = $_POST['content'] ?? '';
     $category = $_POST['category'] ?? '';
+    $author = $_POST['author'] ?? '';
     $image = $_FILES['image'] ?? null;
     
     // If no image is provided, keep the old image
@@ -92,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
                 'title' => $title,
                 'content' => $content,
                 'category_id' => $category,
+                'author' => $author,
                 'image' => $targetFilePath
             ];
         } else {
@@ -106,6 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
             'title' => $title,
             'content' => $content,
             'category_id' => $category,
+            'author' => $author,
             'image' => $previousImage  // Use the old image from the database
         ];
     }

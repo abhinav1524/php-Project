@@ -98,11 +98,12 @@ if ($user["role"] !== "admin") {
       <thead class="table-dark">
         <tr>
           <th>S.no</th>
-          <th>title</th>
+          <th>Title</th>
           <th>Slug</th>
-          <th>description</th>
-          <th>category</th>
-          <th>image</th>
+          <th>Author</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Image</th>
           <th>Action</th>
         </tr>
       </thead>

@@ -103,6 +103,10 @@ if (!$categories) {
                     <input type="text" style="" name="title" class="form-control" id="title"/>
                 </div>
                 <div class="mb-3">
+                    <label for="title" class="form-label">Author</label>
+                    <input type="text" style="" name="author" class="form-control" id="author"/>
+                </div>
+                <div class="mb-3">
                     <label for="content" class="form-label">Content</label>
                     <textarea type="text" name="content" class="form-control" id="content"></textarea>
                 </div>

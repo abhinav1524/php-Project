@@ -48,10 +48,10 @@ $isLoggedIn = isset($_SESSION['user']);
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Posts</a>
+                <a class="nav-link" href="../post/index.php">Posts</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="category.php">Category</a>
+                <a class="nav-link" href="index.php">Category</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="../tag/index.php">Tags</a>

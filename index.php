@@ -2,6 +2,16 @@
 session_start(); 
 // Check if user is logged in
 $isLoggedIn = isset($_SESSION['user']);
+require_once "./Db.php";
+$db =new Database();
+$join = "LEFT JOIN categories c ON posts.category_id = c.id";
+$posts =$db->getData("posts",$join,'posts.*,c.name AS category_name');
+// $current_date_post = $db->getData("posts", '', 'posts.*', 'WHERE DATE(posts.created_at) = CURDATE()');
+
+// echo "<pre>";
+// print_r($posts);
+// die();
+// echo "</pre>";
 ?> 
 <!DOCTYPE html>
 <html lang="en">
@@ -85,212 +95,41 @@ $isLoggedIn = isset($_SESSION['user']);
               <!-- Swiper Container -->
               <div class="swiper-container">
                 <div class="swiper-wrapper">
-                  <!-- Slides -->
-                  <div class="swiper-slide">
-                    <div class="banner-card">
-                      <div class="banner-img">
-                        <img src="images/banner-img-1.png" alt="Slide 1" />
-                      </div>
-                      <div class="banner-content">
-                        <div class="category">
-                          <a href="#">Fashion</a>
-                        </div>
-                        <div class="banner-content-bottom">
-                          <div class="author-area">
-                            <ul>
-                              <li><a href="profile.html">Robert Kcarery</a></li>
-                              <li>
-                                <a href="life-style.html">
-                                  <svg
-                                    width="6"
-                                    height="6"
-                                    viewBox="0 0 6 6"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle
-                                      cx="3"
-                                      cy="3"
-                                      r="3"
-                                      fill="#C4C4C4"></circle>
-                                  </svg>
-                                  "15 Dec 2024"
-                                </a>
-                              </li>
-                            </ul>
+                  <?php foreach($posts as $post): ?>
+                      <!-- Slides -->
+                      <div class="swiper-slide">
+                          <div class="banner-card">
+                              <div class="banner-img">
+                                <?php if (!empty($post['image']) && isset($post['image'])): ?>
+                                    <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="Slide 1" />
+                                <?php endif; ?>
+                              </div>
+                              <div class="banner-content">
+                                  <div class="category">
+                                      <a href="#"><?php echo htmlspecialchars($post['category_name']); ?></a>
+                                  </div>
+                                  <div class="banner-content-bottom">
+                                      <div class="author-area">
+                                          <ul>
+                                              <li><a href="profile.html"><?php echo htmlspecialchars($post['author']); ?></a></li>
+                                              <li>
+                                                  <a href="life-style.html">
+                                                      <svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                          <circle cx="3" cy="3" r="3" fill="#C4C4C4"></circle>
+                                                      </svg>
+                                                      <?php echo date('d M Y', strtotime($post['created_at'])); ?>
+                                                  </a>
+                                              </li>
+                                          </ul>
+                                      </div>
+                                      <h2>
+                                          <a href="standard-format.html"><?php echo htmlspecialchars($post['title']); ?></a>
+                                      </h2>
+                                  </div>
+                              </div>
                           </div>
-                          <h2>
-                            <a href="standard-format.html">
-                              Style Chronicles Fashion Trends and Tips
-                            </a>
-                          </h2>
-                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div class="swiper-slide">
-                    <div class="banner-card">
-                      <div class="banner-img">
-                        <img src="images/banner-img-2.png" alt="Slide 1" />
-                      </div>
-                      <div class="banner-content">
-                        <div class="category">
-                          <a href="#">Fashion</a>
-                        </div>
-                        <div class="banner-content-bottom">
-                          <div class="author-area">
-                            <ul>
-                              <li><a href="profile.html">Robert Kcarery</a></li>
-                              <li>
-                                <a href="life-style.html">
-                                  <svg
-                                    width="6"
-                                    height="6"
-                                    viewBox="0 0 6 6"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle
-                                      cx="3"
-                                      cy="3"
-                                      r="3"
-                                      fill="#C4C4C4"></circle>
-                                  </svg>
-                                  "15 Dec 2024"
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <h2>
-                            <a href="standard-format.html">
-                              Style Chronicles Fashion Trends and Tips
-                            </a>
-                          </h2>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="swiper-slide">
-                    <div class="banner-card">
-                      <div class="banner-img">
-                        <img src="images/banner-img-3.png" alt="Slide 1" />
-                      </div>
-                      <div class="banner-content">
-                        <div class="category">
-                          <a href="#">Fashion</a>
-                        </div>
-                        <div class="banner-content-bottom">
-                          <div class="author-area">
-                            <ul>
-                              <li><a href="profile.html">Robert Kcarery</a></li>
-                              <li>
-                                <a href="life-style.html">
-                                  <svg
-                                    width="6"
-                                    height="6"
-                                    viewBox="0 0 6 6"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle
-                                      cx="3"
-                                      cy="3"
-                                      r="3"
-                                      fill="#C4C4C4"></circle>
-                                  </svg>
-                                  "15 Dec 2024"
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <h2>
-                            <a href="standard-format.html">
-                              Style Chronicles Fashion Trends and Tips
-                            </a>
-                          </h2>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="swiper-slide">
-                    <div class="banner-card">
-                      <div class="banner-img">
-                        <img src="images/banner-img-4.png" alt="Slide 1" />
-                      </div>
-                      <div class="banner-content">
-                        <div class="category">
-                          <a href="#">Fashion</a>
-                        </div>
-                        <div class="banner-content-bottom">
-                          <div class="author-area">
-                            <ul>
-                              <li><a href="profile.html">Robert Kcarery</a></li>
-                              <li>
-                                <a href="life-style.html">
-                                  <svg
-                                    width="6"
-                                    height="6"
-                                    viewBox="0 0 6 6"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle
-                                      cx="3"
-                                      cy="3"
-                                      r="3"
-                                      fill="#C4C4C4"></circle>
-                                  </svg>
-                                  "15 Dec 2024"
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <h2>
-                            <a href="standard-format.html">
-                              Style Chronicles Fashion Trends and Tips
-                            </a>
-                          </h2>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="swiper-slide">
-                    <div class="banner-card">
-                      <div class="banner-img">
-                        <img src="images/banner-img-5.png" alt="Slide 1" />
-                      </div>
-                      <div class="banner-content">
-                        <div class="category">
-                          <a href="#">Fashion</a>
-                        </div>
-                        <div class="banner-content-bottom">
-                          <div class="author-area">
-                            <ul>
-                              <li><a href="profile.html">Robert Kcarery</a></li>
-                              <li>
-                                <a href="life-style.html">
-                                  <svg
-                                    width="6"
-                                    height="6"
-                                    viewBox="0 0 6 6"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <circle
-                                      cx="3"
-                                      cy="3"
-                                      r="3"
-                                      fill="#C4C4C4"></circle>
-                                  </svg>
-                                  "15 Dec 2024"
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <h2>
-                            <a href="standard-format.html">
-                              Style Chronicles Fashion Trends and Tips
-                            </a>
-                          </h2>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <?php endforeach; ?>
                 </div>
                 <!-- Navigation Buttons -->
                 <div class="banner-btn-group">
@@ -393,120 +232,33 @@ $isLoggedIn = isset($_SESSION['user']);
                     transition-duration: 1500ms;
                     transform: translate3d(-956px, 0px, 0px);
                   ">
-                  <div
-                    class="swiper-slide"
-                    style="width: 298.667px; margin-right: 20px"
-                    role="group"
-                    aria-label="2 / 6">
-                    <div class="discover-content">
-                      <div class="number">
-                        <span>02</span>
+                    <?php foreach($posts as $key=> $post): ?>
+                      <div
+                        class="swiper-slide"
+                        style="width: 298.667px; margin-right: 20px"
+                        role="group"
+                        aria-label="2 / 6">
+                        <div class="discover-content">
+                          <div class="number">
+                            <span>
+                              <?php
+                              if($key<9){
+                                echo '0'.$key+1;
+                              }
+                              ?>
+                            </span>
+                          </div>
+                          <div class="other-content">
+                            <a href="life-style.html"><?php echo date('d M Y', strtotime($post['created_at']));?></a>
+                            <h6>
+                              <a href="standard.php"
+                                ><?php echo htmlspecialchars($post['title']); ?></a
+                              >
+                            </h6>
+                          </div>
+                        </div>
                       </div>
-                      <div class="other-content">
-                        <a href="life-style.html">05 January, 2024</a>
-                        <h6>
-                          <a href="standard-formate.html"
-                            >Foodie Diaries: Recipes for Every Occasion</a
-                          >
-                        </h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="swiper-slide"
-                    style="width: 298.667px; margin-right: 20px"
-                    role="group"
-                    aria-label="3 / 6">
-                    <div class="discover-content">
-                      <div class="number">
-                        <span>03</span>
-                      </div>
-                      <div class="other-content">
-                        <a href="life-style.html">05 January, 2024</a>
-                        <h6>
-                          <a href="standard-formate.html"
-                            >Foodie Diaries: Recipes for Every Occasion</a
-                          >
-                        </h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="swiper-slide swiper-slide-prev"
-                    style="width: 298.667px; margin-right: 20px"
-                    role="group"
-                    aria-label="4 / 6">
-                    <div class="discover-content">
-                      <div class="number">
-                        <span>01</span>
-                      </div>
-                      <div class="other-content">
-                        <a href="life-style.html">05 January, 2024</a>
-                        <h6>
-                          <a href="standard-formate.html"
-                            >Foodie Diaries: Recipes for Every Occasion</a
-                          >
-                        </h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="swiper-slide swiper-slide-active"
-                    style="width: 298.667px; margin-right: 20px"
-                    role="group"
-                    aria-label="5 / 6">
-                    <div class="discover-content">
-                      <div class="number">
-                        <span>02</span>
-                      </div>
-                      <div class="other-content">
-                        <a href="life-style.html">05 January, 2024</a>
-                        <h6>
-                          <a href="standard-formate.html"
-                            >Foodie Diaries: Recipes for Every Occasion</a
-                          >
-                        </h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="swiper-slide swiper-slide-next"
-                    role="group"
-                    aria-label="6 / 6"
-                    style="width: 298.667px; margin-right: 20px">
-                    <div class="discover-content">
-                      <div class="number">
-                        <span>03</span>
-                      </div>
-                      <div class="other-content">
-                        <a href="life-style.html">05 January, 2024</a>
-                        <h6>
-                          <a href="standard-formate.html"
-                            >Foodie Diaries: Recipes for Every Occasion</a
-                          >
-                        </h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="swiper-slide"
-                    style="width: 298.667px; margin-right: 20px"
-                    role="group"
-                    aria-label="1 / 6">
-                    <div class="discover-content">
-                      <div class="number">
-                        <span>01</span>
-                      </div>
-                      <div class="other-content">
-                        <a href="life-style.html">05 January, 2024</a>
-                        <h6>
-                          <a href="standard-formate.html"
-                            >Foodie Diaries: Recipes for Every Occasion</a
-                          >
-                        </h6>
-                      </div>
-                    </div>
-                  </div>
+                    <?php endforeach; ?>
                 </div>
                 <span
                   class="swiper-notification"
@@ -613,19 +365,20 @@ $isLoggedIn = isset($_SESSION['user']);
                 aria-labelledby="pills-home-tab"
                 tabindex="0">
                 <div class="row g-4 gy-5">
+                  <?php foreach($posts as $post): ?>
                   <div class="col-md-6">
                     <div class="blog-card">
                       <div class="blog-card-img-wrap">
-                        <a href="standard-formate.html">
-                          <img src="images/travel-01.png" alt="" />
+                        <a href="standard.php">
+                          <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
                         </a>
-                        <a href="life-style.html"><span>Travel</span> </a>
+                        <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
                       </div>
                       <div class="blog-content">
                         <div class="author-area">
                           <ul>
                             <li>
-                              <a href="editor-profile.html">Robert Kcarery</a>
+                              <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
                             </li>
                             <li>
                               <a class="publish-date" href="life-style.html">
@@ -641,224 +394,20 @@ $isLoggedIn = isset($_SESSION['user']);
                                     r="3"
                                     fill="#C4C4C4"></circle>
                                 </svg>
-                                08 Jan, 2024</a
+                                <?php echo date('d M Y', strtotime($post['created_at'])); ?></a
                               >
                             </li>
                           </ul>
                         </div>
                         <h5>
-                          <a href="standard-formate.html"
-                            >Pairing Wine with Gastronomic Delights.</a
+                          <a href="standard.php"
+                            ><?php echo htmlspecialchars($post['author']); ?></a
                           >
                         </h5>
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-6">
-                    <div class="blog-card">
-                      <div class="blog-card-img-wrap">
-                        <a href="standard-formate.html">
-                          <img src="images/travel-02.png" alt="" />
-                        </a>
-                        <a href="life-style.html"><span>Travel</span> </a>
-                      </div>
-                      <div class="blog-content">
-                        <div class="author-area">
-                          <ul>
-                            <li>
-                              <a href="editor-profile.html">Robert Kcarery</a>
-                            </li>
-                            <li>
-                              <a class="publish-date" href="life-style.html">
-                                <svg
-                                  width="6"
-                                  height="6"
-                                  viewBox="0 0 6 6"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg">
-                                  <circle
-                                    cx="3"
-                                    cy="3"
-                                    r="3"
-                                    fill="#C4C4C4"></circle>
-                                </svg>
-                                08 Jan, 2024</a
-                              >
-                            </li>
-                          </ul>
-                        </div>
-                        <h5>
-                          <a href="standard-formate.html"
-                            >Pairing Wine with Gastronomic Delights.</a
-                          >
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="blog-card">
-                      <div class="blog-card-img-wrap">
-                        <a href="standard-formate.html">
-                          <img src="images/travel-01.png" alt="" />
-                        </a>
-                        <a href="life-style.html"><span>Travel</span> </a>
-                      </div>
-                      <div class="blog-content">
-                        <div class="author-area">
-                          <ul>
-                            <li>
-                              <a href="editor-profile.html">Robert Kcarery</a>
-                            </li>
-                            <li>
-                              <a class="publish-date" href="life-style.html">
-                                <svg
-                                  width="6"
-                                  height="6"
-                                  viewBox="0 0 6 6"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg">
-                                  <circle
-                                    cx="3"
-                                    cy="3"
-                                    r="3"
-                                    fill="#C4C4C4"></circle>
-                                </svg>
-                                08 Jan, 2024</a
-                              >
-                            </li>
-                          </ul>
-                        </div>
-                        <h5>
-                          <a href="standard-formate.html"
-                            >Pairing Wine with Gastronomic Delights.</a
-                          >
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="blog-card">
-                      <div class="blog-card-img-wrap">
-                        <a href="standard-formate.html">
-                          <img src="images/travel-02.png" alt="" />
-                        </a>
-                        <a href="life-style.html"><span>Travel</span> </a>
-                      </div>
-                      <div class="blog-content">
-                        <div class="author-area">
-                          <ul>
-                            <li>
-                              <a href="editor-profile.html">Robert Kcarery</a>
-                            </li>
-                            <li>
-                              <a class="publish-date" href="life-style.html">
-                                <svg
-                                  width="6"
-                                  height="6"
-                                  viewBox="0 0 6 6"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg">
-                                  <circle
-                                    cx="3"
-                                    cy="3"
-                                    r="3"
-                                    fill="#C4C4C4"></circle>
-                                </svg>
-                                08 Jan, 2024</a
-                              >
-                            </li>
-                          </ul>
-                        </div>
-                        <h5>
-                          <a href="standard-formate.html"
-                            >Pairing Wine with Gastronomic Delights.</a
-                          >
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="blog-card">
-                      <div class="blog-card-img-wrap">
-                        <a href="standard-formate.html">
-                          <img src="images/travel-01.png" alt="" />
-                        </a>
-                        <a href="life-style.html"><span>Travel</span> </a>
-                      </div>
-                      <div class="blog-content">
-                        <div class="author-area">
-                          <ul>
-                            <li>
-                              <a href="editor-profile.html">Robert Kcarery</a>
-                            </li>
-                            <li>
-                              <a class="publish-date" href="life-style.html">
-                                <svg
-                                  width="6"
-                                  height="6"
-                                  viewBox="0 0 6 6"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg">
-                                  <circle
-                                    cx="3"
-                                    cy="3"
-                                    r="3"
-                                    fill="#C4C4C4"></circle>
-                                </svg>
-                                08 Jan, 2024</a
-                              >
-                            </li>
-                          </ul>
-                        </div>
-                        <h5>
-                          <a href="standard-formate.html"
-                            >Pairing Wine with Gastronomic Delights.</a
-                          >
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="blog-card">
-                      <div class="blog-card-img-wrap">
-                        <a href="standard-formate.html">
-                          <img src="images/travel-02.png" alt="" />
-                        </a>
-                        <a href="life-style.html"><span>Travel</span> </a>
-                      </div>
-                      <div class="blog-content">
-                        <div class="author-area">
-                          <ul>
-                            <li>
-                              <a href="editor-profile.html">Robert Kcarery</a>
-                            </li>
-                            <li>
-                              <a class="publish-date" href="life-style.html">
-                                <svg
-                                  width="6"
-                                  height="6"
-                                  viewBox="0 0 6 6"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg">
-                                  <circle
-                                    cx="3"
-                                    cy="3"
-                                    r="3"
-                                    fill="#C4C4C4"></circle>
-                                </svg>
-                                08 Jan, 2024</a
-                              >
-                            </li>
-                          </ul>
-                        </div>
-                        <h5>
-                          <a href="standard-formate.html"
-                            >Pairing Wine with Gastronomic Delights.</a
-                          >
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
+                  <?php endforeach; ?>
                   <div class="d-flex justify-content-center align-items-center">
                     <a href="#" class="loadmore">Loadmore</a>
                   </div>
@@ -871,19 +420,20 @@ $isLoggedIn = isset($_SESSION['user']);
                 aria-labelledby="pills-profile-tab"
                 tabindex="0">
                 <div class="row g-4 gy-5">
+                   <?php foreach($posts as $post): ?>
                   <div class="col-md-6">
                     <div class="blog-card">
                       <div class="blog-card-img-wrap">
-                        <a href="standard-formate.html">
-                          <img src="images/travel-01.png" alt="" />
+                        <a href="standard.php">
+                          <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
                         </a>
-                        <a href="life-style.html"><span>Travel</span> </a>
+                        <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
                       </div>
                       <div class="blog-content">
                         <div class="author-area">
                           <ul>
                             <li>
-                              <a href="editor-profile.html">Robert Kcarery</a>
+                              <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
                             </li>
                             <li>
                               <a class="publish-date" href="life-style.html">
@@ -899,60 +449,20 @@ $isLoggedIn = isset($_SESSION['user']);
                                     r="3"
                                     fill="#C4C4C4"></circle>
                                 </svg>
-                                08 Jan, 2024</a
+                                <?php echo date('d M Y', strtotime($post['created_at'])); ?></a
                               >
                             </li>
                           </ul>
                         </div>
                         <h5>
-                          <a href="standard-formate.html"
-                            >Pairing Wine with Gastronomic Delights.</a
+                          <a href="standard.php"
+                            ><?php echo htmlspecialchars($post['author']); ?></a
                           >
                         </h5>
                       </div>
                     </div>
                   </div>
-                  <div class="col-md-6">
-                    <div class="blog-card">
-                      <div class="blog-card-img-wrap">
-                        <a href="standard-formate.html">
-                          <img src="images/travel-02.png" alt="" />
-                        </a>
-                        <a href="life-style.html"><span>Travel</span> </a>
-                      </div>
-                      <div class="blog-content">
-                        <div class="author-area">
-                          <ul>
-                            <li>
-                              <a href="editor-profile.html">Robert Kcarery</a>
-                            </li>
-                            <li>
-                              <a class="publish-date" href="life-style.html">
-                                <svg
-                                  width="6"
-                                  height="6"
-                                  viewBox="0 0 6 6"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg">
-                                  <circle
-                                    cx="3"
-                                    cy="3"
-                                    r="3"
-                                    fill="#C4C4C4"></circle>
-                                </svg>
-                                08 Jan, 2024</a
-                              >
-                            </li>
-                          </ul>
-                        </div>
-                        <h5>
-                          <a href="standard-formate.html"
-                            >Pairing Wine with Gastronomic Delights.</a
-                          >
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
+                  <?php endforeach; ?>
                 </div>
               </div>
               <div
@@ -961,7 +471,51 @@ $isLoggedIn = isset($_SESSION['user']);
                 role="tabpanel"
                 aria-labelledby="pills-contact-tab"
                 tabindex="0">
-                this is the third tab
+                <div class="row g-4 gy-5">
+                   <?php foreach($posts as $post): ?>
+                  <div class="col-md-6">
+                    <div class="blog-card">
+                      <div class="blog-card-img-wrap">
+                        <a href="standard.php">
+                          <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
+                        </a>
+                        <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
+                      </div>
+                      <div class="blog-content">
+                        <div class="author-area">
+                          <ul>
+                            <li>
+                              <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
+                            </li>
+                            <li>
+                              <a class="publish-date" href="life-style.html">
+                                <svg
+                                  width="6"
+                                  height="6"
+                                  viewBox="0 0 6 6"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg">
+                                  <circle
+                                    cx="3"
+                                    cy="3"
+                                    r="3"
+                                    fill="#C4C4C4"></circle>
+                                </svg>
+                                <?php echo date('d M Y', strtotime($post['created_at'])); ?></a
+                              >
+                            </li>
+                          </ul>
+                        </div>
+                        <h5>
+                          <a href="standard.php"
+                            ><?php echo htmlspecialchars($post['author']); ?></a
+                          >
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                  <?php endforeach; ?>
+                </div>
               </div>
               <div
                 class="tab-pane fade"
@@ -969,7 +523,51 @@ $isLoggedIn = isset($_SESSION['user']);
                 role="tabpanel"
                 aria-labelledby="pills-tech-tab"
                 tabindex="0">
-                this is the fourth tab
+                <div class="row g-4 gy-5">
+                   <?php foreach($posts as $post): ?>
+                  <div class="col-md-6">
+                    <div class="blog-card">
+                      <div class="blog-card-img-wrap">
+                        <a href="standard.php">
+                          <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
+                        </a>
+                        <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
+                      </div>
+                      <div class="blog-content">
+                        <div class="author-area">
+                          <ul>
+                            <li>
+                              <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
+                            </li>
+                            <li>
+                              <a class="publish-date" href="life-style.html">
+                                <svg
+                                  width="6"
+                                  height="6"
+                                  viewBox="0 0 6 6"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg">
+                                  <circle
+                                    cx="3"
+                                    cy="3"
+                                    r="3"
+                                    fill="#C4C4C4"></circle>
+                                </svg>
+                                <?php echo date('d M Y', strtotime($post['created_at'])); ?></a
+                              >
+                            </li>
+                          </ul>
+                        </div>
+                        <h5>
+                          <a href="standard.php"
+                            ><?php echo htmlspecialchars($post['author']); ?></a
+                          >
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                  <?php endforeach; ?>
+                </div>
               </div>
               <div
                 class="tab-pane fade"
@@ -977,7 +575,51 @@ $isLoggedIn = isset($_SESSION['user']);
                 role="tabpanel"
                 aria-labelledby="pills-beauty-tab"
                 tabindex="0">
-                this is the fifth tab
+                <div class="row g-4 gy-5">
+                   <?php foreach($posts as $post): ?>
+                  <div class="col-md-6">
+                    <div class="blog-card">
+                      <div class="blog-card-img-wrap">
+                        <a href="standard.php">
+                          <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
+                        </a>
+                        <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
+                      </div>
+                      <div class="blog-content">
+                        <div class="author-area">
+                          <ul>
+                            <li>
+                              <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
+                            </li>
+                            <li>
+                              <a class="publish-date" href="life-style.html">
+                                <svg
+                                  width="6"
+                                  height="6"
+                                  viewBox="0 0 6 6"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg">
+                                  <circle
+                                    cx="3"
+                                    cy="3"
+                                    r="3"
+                                    fill="#C4C4C4"></circle>
+                                </svg>
+                                <?php echo date('d M Y', strtotime($post['created_at'])); ?></a
+                              >
+                            </li>
+                          </ul>
+                        </div>
+                        <h5>
+                          <a href="standard.php"
+                            ><?php echo htmlspecialchars($post['author']); ?></a
+                          >
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                  <?php endforeach; ?>
+                </div>
               </div>
               <div
                 class="tab-pane fade"
@@ -985,7 +627,51 @@ $isLoggedIn = isset($_SESSION['user']);
                 role="tabpanel"
                 aria-labelledby="pills-gaming-tab"
                 tabindex="0">
-                this is the sixth tab
+                <div class="row g-4 gy-5">
+                   <?php foreach($posts as $post): ?>
+                  <div class="col-md-6">
+                    <div class="blog-card">
+                      <div class="blog-card-img-wrap">
+                        <a href="standard.php">
+                          <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
+                        </a>
+                        <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
+                      </div>
+                      <div class="blog-content">
+                        <div class="author-area">
+                          <ul>
+                            <li>
+                              <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
+                            </li>
+                            <li>
+                              <a class="publish-date" href="life-style.html">
+                                <svg
+                                  width="6"
+                                  height="6"
+                                  viewBox="0 0 6 6"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg">
+                                  <circle
+                                    cx="3"
+                                    cy="3"
+                                    r="3"
+                                    fill="#C4C4C4"></circle>
+                                </svg>
+                                <?php echo date('d M Y', strtotime($post['created_at'])); ?></a
+                              >
+                            </li>
+                          </ul>
+                        </div>
+                        <h5>
+                          <a href="standard.php"
+                            ><?php echo htmlspecialchars($post['author']); ?></a
+                          >
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                  <?php endforeach; ?>
+                </div>
               </div>
             </div>
           </div>
@@ -996,14 +682,14 @@ $isLoggedIn = isset($_SESSION['user']);
                 <h6>Featured Post</h6>
                 <div class="recent-post mb-20">
                   <div class="recent-post-img">
-                    <a href="standard-formate.html"
+                    <a href="standard.php"
                       ><img src="images/sidebar-img1.png" alt=""
                     /></a>
                   </div>
                   <div class="recent-post-content">
                     <a href="life-style.html">05 January, 2024</a>
                     <h5>
-                      <a href="standard-formate.html"
+                      <a href="standard.php"
                         >A Guide to Better Sleep Habits.</a
                       >
                     </h5>
@@ -1011,14 +697,14 @@ $isLoggedIn = isset($_SESSION['user']);
                 </div>
                 <div class="recent-post mb-20">
                   <div class="recent-post-img">
-                    <a href="standard-formate.html"
+                    <a href="standard.php"
                       ><img src="images/sidebar-img2.png" alt=""
                     /></a>
                   </div>
                   <div class="recent-post-content">
                     <a href="life-style.html">05 January, 2024</a>
                     <h5>
-                      <a href="standard-formate.html"
+                      <a href="standard.php"
                         >A Guide to Better Sleep Habits.</a
                       >
                     </h5>
@@ -1026,14 +712,14 @@ $isLoggedIn = isset($_SESSION['user']);
                 </div>
                 <div class="recent-post mb-20">
                   <div class="recent-post-img">
-                    <a href="standard-formate.html"
+                    <a href="standard.php"
                       ><img src="images/sidebar-img3.png" alt=""
                     /></a>
                   </div>
                   <div class="recent-post-content">
                     <a href="life-style.html">05 January, 2024</a>
                     <h5>
-                      <a href="standard-formate.html"
+                      <a href="standard.php"
                         >A Guide to Better Sleep Habits.</a
                       >
                     </h5>
@@ -1041,14 +727,14 @@ $isLoggedIn = isset($_SESSION['user']);
                 </div>
                 <div class="recent-post mb-20">
                   <div class="recent-post-img">
-                    <a href="standard-formate.html"
+                    <a href="standard.php"
                       ><img src="images/sidebar-img4.png" alt=""
                     /></a>
                   </div>
                   <div class="recent-post-content">
                     <a href="life-style.html">05 January, 2024</a>
                     <h5>
-                      <a href="standard-formate.html"
+                      <a href="standard.php"
                         >A Guide to Better Sleep Habits.</a
                       >
                     </h5>
