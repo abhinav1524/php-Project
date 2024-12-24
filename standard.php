@@ -1,3 +1,36 @@
+<?php
+session_start(); 
+// Check if user is logged in
+$isLoggedIn = isset($_SESSION['user']);
+require_once "./Db.php";
+$db =new Database();
+// Get the post ID from the URL
+$postId = $_GET['id'] ?? null;
+// echo "<pre>";
+// print_r($postId);
+// die();
+// echo "</pre>";
+
+if ($postId) {
+    // Fetch the post data from the database
+    $join = "LEFT JOIN categories c ON posts.category_id = c.id";
+    $post = $db->getData('posts', $join, 'posts.*,c.name AS category_name', "WHERE posts.id = $postId");
+    // echo "<pre>";
+    // print_r($post);
+    // die();
+    // echo "</pre>";
+    // If post exists, display it
+    if (!empty($post)) {
+        $post = $post[0]; // Since getData returns an array of results
+    } else {
+        echo "Post not found.";
+        exit;
+    }
+} else {
+    echo "Invalid post ID.";
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -15,7 +48,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.6/swiper-bundle.min.css" />
     <link rel="stylesheet" href="style.css" />
-    <title>Document</title>
+    <title>Post</title>
   </head>
   <body class="bg-light text-dark">
     <header class="fixed-top">
@@ -38,18 +71,18 @@
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="index.html"
+                <a class="nav-link active" aria-current="page" href="index.php"
                   >Home</a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
+                <a class="nav-link" href="about.php">About</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Contact</a>
+                <a class="nav-link" href="contact.php">Contact</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="login.html">Login</a>
+                <a class="nav-link" href="login.php">Login</a>
               </li>
             </ul>
           </div>
@@ -60,18 +93,19 @@
       <div class="row g-4 gy-5">
         <div class="col-12 col-md-12 col-lg-8">
           <div class="post-thump">
-            <img src="images/thump-image1.png" alt="" />
+            <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
           </div>
           <ul class="post-meta">
-            <li><a href="#">Caleb Benjamin</a></li>
-            <li><a href="#" class="publish-date">27 Jan, 2024</a></li>
+            <li><a href="#"><?php echo htmlspecialchars($post['author']); ?></a></li>
+            <li><a href="#" class="publish-date"><?php echo date('d M Y', strtotime($post['created_at'])); ?></a></li>
           </ul>
           <h1 class="post-heading">
-            Infinite Insert Your Journey into Gaming Infinity
+            <?php echo htmlspecialchars($post['title']); ?>
           </h1>
           <div class="row justify-content-center">
             <div class="col-lg-10 mb-60">
               <div class="blog-content">
+                <?php echo $post['content']; ?>
                 <p>
                   "Infinite Odyssey: Your Journey into Gaming Infinity" is a
                   groundbreaking gaming experience that transcends traditional
@@ -123,15 +157,13 @@
               <div class="blog-tag">
                 <div class="author-name">
                   <h6>
-                    Posted by <a href="editor-profile.html">Robert Kcarery</a>
+                    Posted by <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
                   </h6>
                 </div>
                 <div class="tag-items">
                   <h6>Categorized:</h6>
                   <ul>
-                    <li><a href="life-style.html">Gaming Tips,</a></li>
-                    <li><a href="life-style.html">Competition,</a></li>
-                    <li><a href="life-style.html">Chanllenge</a></li>
+                    <li><a href="life-style.html"><?php echo htmlspecialchars($post['category_name']); ?></a></li>
                   </ul>
                 </div>
               </div>

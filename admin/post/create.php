@@ -125,6 +125,14 @@ if (!$categories) {
                     <label for="image" class="form-label">Feature Image</label>
                     <input type="file" name="image" class="form-control" id="image"/>
                 </div>
+                <div class="mb-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="1" name="feature_post" id="flexCheckDefault">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        Feature Post
+                      </label>
+                    </div> 
+                </div>
                 <button type="submit" name="insert" value="true" class="btn btn-primary">Submit</button>
                 </form>
             </div>
@@ -141,6 +149,12 @@ if (!$categories) {
     toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
     height: 500,
     menubar: false,
+     formats: {
+      h1: { block: 'h1' },
+      h2: { block: 'h2' },
+      h3: { block: 'h3' },
+      p: { block: 'p' }
+    }
   });
 </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.6/swiper-bundle.min.js"></script>

@@ -23,19 +23,17 @@ a {
   --border-color: #eee;
   --feature-post: #ec6219;
   --text-color: #fff;
+  --text-color2: #c4c4c4;
   --bs-table-bg: transparent;
 }
 #toggleDarkMode {
-  width: 30px;
-  height: 25px;
-  position: relative;
+  text-align: center;
+  background-color: transparent;
+  border: none;
+  outline: none;
 }
-#darkModeIcon {
-  position: absolute;
-  top: 1;
-  left: 0;
-  right: 0;
-  bottom: 0;
+.fa-sun {
+  color: var(--text-color);
 }
 .mt-100 {
   margin-top: 100px;
@@ -249,7 +247,7 @@ a {
   font-weight: 500;
   line-height: 2;
   text-align: left;
-  color: #555;
+  color: var(--text-color2);
   transition: 0.35s;
 }
 
@@ -505,6 +503,7 @@ a {
   a
   img {
   max-width: 92px;
+  max-height: 90px;
   border-radius: 5px;
 }
 
@@ -571,7 +570,7 @@ a {
   transition: 0.35s;
 }
 .bg-dark .loadmore {
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: 0em;
@@ -833,6 +832,7 @@ a {
 .blog-tag .tag-items ul {
   display: flex;
   gap: 10px;
+  margin-bottom: 7px;
 }
 .blog-tag .tag-items ul li a {
   font-size: 14px;
@@ -1401,4 +1401,25 @@ input {
 /* table body css */
 .bg-dark table tbody tr td {
   color: var(--white-color);
+}
+
+.image-container {
+  position: relative;
+  width: 100%; /* Full width */
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  overflow: hidden;
+  border-radius: 8px; /* Optional for rounded corners */
+}
+
+.image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures proper scaling without distortion */
+}
+
+.blog-post {
+  transition: all 0.3s ease;
 }

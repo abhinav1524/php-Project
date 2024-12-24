@@ -6,10 +6,10 @@ require_once "./Db.php";
 $db =new Database();
 $join = "LEFT JOIN categories c ON posts.category_id = c.id";
 $posts =$db->getData("posts",$join,'posts.*,c.name AS category_name');
+$feature_posts=$db->getData("posts",'','posts.*', 'WHERE feature_post = 1');
 // $current_date_post = $db->getData("posts", '', 'posts.*', 'WHERE DATE(posts.created_at) = CURDATE()');
-
 // echo "<pre>";
-// print_r($posts);
+// print_r($feature_posts);
 // die();
 // echo "</pre>";
 ?> 
@@ -30,7 +30,7 @@ $posts =$db->getData("posts",$join,'posts.*,c.name AS category_name');
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.6/swiper-bundle.min.css" />
     <link rel="stylesheet" href="style.css" />
-    <title>Document</title>
+    <title>Posts</title>
   </head>
   <body class="bg-light text-dark">
     <header class="fixed-top">
@@ -58,10 +58,10 @@ $posts =$db->getData("posts",$join,'posts.*,c.name AS category_name');
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
+                <a class="nav-link" href="about.php">About</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Contact</a>
+                <a class="nav-link" href="contact.php">Contact</a>
               </li>
               <li class="nav-item">
                 <?php if ($isLoggedIn): ?>
@@ -123,7 +123,7 @@ $posts =$db->getData("posts",$join,'posts.*,c.name AS category_name');
                                           </ul>
                                       </div>
                                       <h2>
-                                          <a href="standard-format.html"><?php echo htmlspecialchars($post['title']); ?></a>
+                                          <a href="standard.php?id=<?php echo $post['id']; ?>"><?php echo htmlspecialchars($post['title']); ?></a>
                                       </h2>
                                   </div>
                               </div>
@@ -249,7 +249,7 @@ $posts =$db->getData("posts",$join,'posts.*,c.name AS category_name');
                             </span>
                           </div>
                           <div class="other-content">
-                            <a href="life-style.html"><?php echo date('d M Y', strtotime($post['created_at']));?></a>
+                            <a href="life-style.html"><?php echo date('d F Y', strtotime($post['created_at']));?></a>
                             <h6>
                               <a href="standard.php"
                                 ><?php echo htmlspecialchars($post['title']); ?></a
@@ -281,6 +281,17 @@ $posts =$db->getData("posts",$join,'posts.*,c.name AS category_name');
               <li class="nav-item" role="presentation">
                 <button
                   class="tab-btn active"
+                  id="pills-all-tab"
+                  data-bs-toggle="pill"
+                  type="button"
+                  role="tab"
+                  All>
+                  All
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button
+                  class="tab-btn"
                   id="pills-home-tab"
                   data-bs-toggle="pill"
                   data-bs-target="#pills-home"
@@ -360,17 +371,17 @@ $posts =$db->getData("posts",$join,'posts.*,c.name AS category_name');
             <div class="tab-content" id="pills-tabContent">
               <div
                 class="tab-pane fade show active"
-                id="pills-home"
                 role="tabpanel"
-                aria-labelledby="pills-home-tab"
                 tabindex="0">
                 <div class="row g-4 gy-5">
                   <?php foreach($posts as $post): ?>
-                  <div class="col-md-6">
+                  <div class="col-md-6 blog-post" data-category="<?php echo htmlspecialchars($post['category_name']); ?>">
                     <div class="blog-card">
                       <div class="blog-card-img-wrap">
                         <a href="standard.php">
+                          <div class="image-container">
                           <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
+                          </div>
                         </a>
                         <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
                       </div>
@@ -401,7 +412,7 @@ $posts =$db->getData("posts",$join,'posts.*,c.name AS category_name');
                         </div>
                         <h5>
                           <a href="standard.php"
-                            ><?php echo htmlspecialchars($post['author']); ?></a
+                            ><?php echo htmlspecialchars($post['title']); ?></a
                           >
                         </h5>
                       </div>
@@ -413,266 +424,6 @@ $posts =$db->getData("posts",$join,'posts.*,c.name AS category_name');
                   </div>
                 </div>
               </div>
-              <div
-                class="tab-pane fade"
-                id="pills-profile"
-                role="tabpanel"
-                aria-labelledby="pills-profile-tab"
-                tabindex="0">
-                <div class="row g-4 gy-5">
-                   <?php foreach($posts as $post): ?>
-                  <div class="col-md-6">
-                    <div class="blog-card">
-                      <div class="blog-card-img-wrap">
-                        <a href="standard.php">
-                          <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
-                        </a>
-                        <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
-                      </div>
-                      <div class="blog-content">
-                        <div class="author-area">
-                          <ul>
-                            <li>
-                              <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
-                            </li>
-                            <li>
-                              <a class="publish-date" href="life-style.html">
-                                <svg
-                                  width="6"
-                                  height="6"
-                                  viewBox="0 0 6 6"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg">
-                                  <circle
-                                    cx="3"
-                                    cy="3"
-                                    r="3"
-                                    fill="#C4C4C4"></circle>
-                                </svg>
-                                <?php echo date('d M Y', strtotime($post['created_at'])); ?></a
-                              >
-                            </li>
-                          </ul>
-                        </div>
-                        <h5>
-                          <a href="standard.php"
-                            ><?php echo htmlspecialchars($post['author']); ?></a
-                          >
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                  <?php endforeach; ?>
-                </div>
-              </div>
-              <div
-                class="tab-pane fade"
-                id="pills-contact"
-                role="tabpanel"
-                aria-labelledby="pills-contact-tab"
-                tabindex="0">
-                <div class="row g-4 gy-5">
-                   <?php foreach($posts as $post): ?>
-                  <div class="col-md-6">
-                    <div class="blog-card">
-                      <div class="blog-card-img-wrap">
-                        <a href="standard.php">
-                          <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
-                        </a>
-                        <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
-                      </div>
-                      <div class="blog-content">
-                        <div class="author-area">
-                          <ul>
-                            <li>
-                              <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
-                            </li>
-                            <li>
-                              <a class="publish-date" href="life-style.html">
-                                <svg
-                                  width="6"
-                                  height="6"
-                                  viewBox="0 0 6 6"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg">
-                                  <circle
-                                    cx="3"
-                                    cy="3"
-                                    r="3"
-                                    fill="#C4C4C4"></circle>
-                                </svg>
-                                <?php echo date('d M Y', strtotime($post['created_at'])); ?></a
-                              >
-                            </li>
-                          </ul>
-                        </div>
-                        <h5>
-                          <a href="standard.php"
-                            ><?php echo htmlspecialchars($post['author']); ?></a
-                          >
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                  <?php endforeach; ?>
-                </div>
-              </div>
-              <div
-                class="tab-pane fade"
-                id="pills-tech"
-                role="tabpanel"
-                aria-labelledby="pills-tech-tab"
-                tabindex="0">
-                <div class="row g-4 gy-5">
-                   <?php foreach($posts as $post): ?>
-                  <div class="col-md-6">
-                    <div class="blog-card">
-                      <div class="blog-card-img-wrap">
-                        <a href="standard.php">
-                          <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
-                        </a>
-                        <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
-                      </div>
-                      <div class="blog-content">
-                        <div class="author-area">
-                          <ul>
-                            <li>
-                              <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
-                            </li>
-                            <li>
-                              <a class="publish-date" href="life-style.html">
-                                <svg
-                                  width="6"
-                                  height="6"
-                                  viewBox="0 0 6 6"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg">
-                                  <circle
-                                    cx="3"
-                                    cy="3"
-                                    r="3"
-                                    fill="#C4C4C4"></circle>
-                                </svg>
-                                <?php echo date('d M Y', strtotime($post['created_at'])); ?></a
-                              >
-                            </li>
-                          </ul>
-                        </div>
-                        <h5>
-                          <a href="standard.php"
-                            ><?php echo htmlspecialchars($post['author']); ?></a
-                          >
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                  <?php endforeach; ?>
-                </div>
-              </div>
-              <div
-                class="tab-pane fade"
-                id="pills-beauty"
-                role="tabpanel"
-                aria-labelledby="pills-beauty-tab"
-                tabindex="0">
-                <div class="row g-4 gy-5">
-                   <?php foreach($posts as $post): ?>
-                  <div class="col-md-6">
-                    <div class="blog-card">
-                      <div class="blog-card-img-wrap">
-                        <a href="standard.php">
-                          <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
-                        </a>
-                        <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
-                      </div>
-                      <div class="blog-content">
-                        <div class="author-area">
-                          <ul>
-                            <li>
-                              <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
-                            </li>
-                            <li>
-                              <a class="publish-date" href="life-style.html">
-                                <svg
-                                  width="6"
-                                  height="6"
-                                  viewBox="0 0 6 6"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg">
-                                  <circle
-                                    cx="3"
-                                    cy="3"
-                                    r="3"
-                                    fill="#C4C4C4"></circle>
-                                </svg>
-                                <?php echo date('d M Y', strtotime($post['created_at'])); ?></a
-                              >
-                            </li>
-                          </ul>
-                        </div>
-                        <h5>
-                          <a href="standard.php"
-                            ><?php echo htmlspecialchars($post['author']); ?></a
-                          >
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                  <?php endforeach; ?>
-                </div>
-              </div>
-              <div
-                class="tab-pane fade"
-                id="pills-gaming"
-                role="tabpanel"
-                aria-labelledby="pills-gaming-tab"
-                tabindex="0">
-                <div class="row g-4 gy-5">
-                   <?php foreach($posts as $post): ?>
-                  <div class="col-md-6">
-                    <div class="blog-card">
-                      <div class="blog-card-img-wrap">
-                        <a href="standard.php">
-                          <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
-                        </a>
-                        <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
-                      </div>
-                      <div class="blog-content">
-                        <div class="author-area">
-                          <ul>
-                            <li>
-                              <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
-                            </li>
-                            <li>
-                              <a class="publish-date" href="life-style.html">
-                                <svg
-                                  width="6"
-                                  height="6"
-                                  viewBox="0 0 6 6"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg">
-                                  <circle
-                                    cx="3"
-                                    cy="3"
-                                    r="3"
-                                    fill="#C4C4C4"></circle>
-                                </svg>
-                                <?php echo date('d M Y', strtotime($post['created_at'])); ?></a
-                              >
-                            </li>
-                          </ul>
-                        </div>
-                        <h5>
-                          <a href="standard.php"
-                            ><?php echo htmlspecialchars($post['author']); ?></a
-                          >
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                  <?php endforeach; ?>
-                </div>
-              </div>
             </div>
           </div>
           <!-- Right Column -->
@@ -680,66 +431,23 @@ $posts =$db->getData("posts",$join,'posts.*,c.name AS category_name');
             <div class="life-style-sidebar">
               <div class="sidebar-widget featured-post">
                 <h6>Featured Post</h6>
+                <?php foreach($feature_posts as $feature_post): ?>
                 <div class="recent-post mb-20">
                   <div class="recent-post-img">
                     <a href="standard.php"
-                      ><img src="images/sidebar-img1.png" alt=""
+                      ><img src="<?php echo str_repeat('../', substr_count($feature_post['image'], '/')) . 'images/' . basename($feature_post['image']); ?>" alt=""
                     /></a>
                   </div>
                   <div class="recent-post-content">
-                    <a href="life-style.html">05 January, 2024</a>
+                    <a href="life-style.html"><?php echo date('d F Y', strtotime($feature_post['created_at'])); ?></a>
                     <h5>
                       <a href="standard.php"
-                        >A Guide to Better Sleep Habits.</a
+                        ><?php echo htmlspecialchars($feature_post['title']); ?></a
                       >
                     </h5>
                   </div>
                 </div>
-                <div class="recent-post mb-20">
-                  <div class="recent-post-img">
-                    <a href="standard.php"
-                      ><img src="images/sidebar-img2.png" alt=""
-                    /></a>
-                  </div>
-                  <div class="recent-post-content">
-                    <a href="life-style.html">05 January, 2024</a>
-                    <h5>
-                      <a href="standard.php"
-                        >A Guide to Better Sleep Habits.</a
-                      >
-                    </h5>
-                  </div>
-                </div>
-                <div class="recent-post mb-20">
-                  <div class="recent-post-img">
-                    <a href="standard.php"
-                      ><img src="images/sidebar-img3.png" alt=""
-                    /></a>
-                  </div>
-                  <div class="recent-post-content">
-                    <a href="life-style.html">05 January, 2024</a>
-                    <h5>
-                      <a href="standard.php"
-                        >A Guide to Better Sleep Habits.</a
-                      >
-                    </h5>
-                  </div>
-                </div>
-                <div class="recent-post mb-20">
-                  <div class="recent-post-img">
-                    <a href="standard.php"
-                      ><img src="images/sidebar-img4.png" alt=""
-                    /></a>
-                  </div>
-                  <div class="recent-post-content">
-                    <a href="life-style.html">05 January, 2024</a>
-                    <h5>
-                      <a href="standard.php"
-                        >A Guide to Better Sleep Habits.</a
-                      >
-                    </h5>
-                  </div>
-                </div>
+                <?php endforeach; ?>
               </div>
             </div>
             <div class="add-image">

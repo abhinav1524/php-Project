@@ -27,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['fetchAll'])) {
     $category =$_POST['category']??'';
     $author =$_POST['author']??'';
     $image =$_FILES['image']??null;
+    $feature_post = isset($_POST['feature_post']) ? 1 : 0;
     // echo "<pre>";
     // print_r($title);
     // print_r($content);
@@ -52,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['fetchAll'])) {
             'category_id'=>$category,
             'author'=>$author,
             'image'=>$targetFilePath,
+            'feature_post' => $feature_post,
         ];
         $result=$db->insert('posts', $data);
         if($result==="Record inserted successfully"){
@@ -76,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $category = $_POST['category'] ?? '';
     $author = $_POST['author'] ?? '';
     $image = $_FILES['image'] ?? null;
+    $feature_post = isset($_POST['feature_post']) ? 1 : 0;
     
     // If no image is provided, keep the old image
     if (!empty($image['name'])) {
@@ -97,7 +100,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
                 'content' => $content,
                 'category_id' => $category,
                 'author' => $author,
-                'image' => $targetFilePath
+                'image' => $targetFilePath,
+                'feature_post' => $feature_post,
             ];
         } else {
             $_SESSION['error'] = "Failed to upload image.";
@@ -112,7 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
             'content' => $content,
             'category_id' => $category,
             'author' => $author,
-            'image' => $previousImage  // Use the old image from the database
+            'image' => $previousImage,  // Use the old image from the database
+            'feature_post' => $feature_post,
         ];
     }
 

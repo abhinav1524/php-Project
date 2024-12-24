@@ -33,10 +33,11 @@ class Database{
         }
     }
     // get data in array format //
-    public function getData($table,$join=null,$select="*") {
+    public function getData($table,$join=null,$select="*",$where=null) {
     $table = $this->conn->real_escape_string($table); // Prevent SQL injection
     $joinQuery = $join ? " $join" : '';
-    $query = "SELECT $select FROM `$table`".$joinQuery;
+    $whereQuery = $where ? " $where" : ''; 
+    $query = "SELECT $select FROM `$table`".$joinQuery.$whereQuery;
     $result = $this->conn->query($query);
 
     if ($result) {

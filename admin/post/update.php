@@ -147,6 +147,14 @@ if (!$categories) {
                         </div>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="feature_post" value="1" id="flexCheckDefault" <?php echo $posts['feature_post'] == 1 ? 'checked' : ''; ?>>
+                      <label class="form-check-label" for="flexCheckDefault">
+                        Feature Post
+                      </label>
+                    </div> 
+                </div>
                 <input type="hidden" name="id" value="<?php echo htmlspecialchars($posts['id']); ?>" />
                 <button type="submit" name="update" value="true" class="btn btn-primary px-5">Submit</button>
                 </form>
@@ -167,6 +175,12 @@ if (!$categories) {
     toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
     height: 500,
     menubar: false,
+     formats: {
+      h1: { block: 'h1' },
+      h2: { block: 'h2' },
+      h3: { block: 'h3' },
+      p: { block: 'p' }
+    }
   });
 </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.6/swiper-bundle.min.js"></script>

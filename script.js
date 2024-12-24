@@ -396,3 +396,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// filter the post for tabs categories //
+document.addEventListener("DOMContentLoaded", function () {
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const posts = document.querySelectorAll(".blog-post");
+
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const targetCategory = this.textContent.trim();
+      posts.forEach((post) => {
+        const postCategory = post.getAttribute("data-category");
+        console.log(postCategory);
+        if (targetCategory === "All" || postCategory === targetCategory) {
+          post.style.display = "block";
+        } else {
+          post.style.display = "none";
+        }
+      });
+    });
+  });
+});
