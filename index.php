@@ -77,7 +77,7 @@ $feature_posts=$db->getData("posts",'','posts.*', 'WHERE feature_post = 1');
     </header>
     <div class="container" style="margin-top: 90px">
       <!-- search bar section -->
-      <div class="d-flex justify-content-center align-items-center">
+      <div class="d-flex justify-content-center align-items-center search_bar">
         <form class="d-flex" role="search">
           <input
             class="form-control me-2"

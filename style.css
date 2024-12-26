@@ -1423,3 +1423,19 @@ input {
 .blog-post {
   transition: all 0.3s ease;
 }
+
+@media (max-width: 768px) {
+  .banner-btn-group {
+    display: none;
+  }
+  .slider-btn-groups {
+    display: none;
+  }
+}
+@media (max-width: 375px) {
+  .search_bar {
+    max-width: 338px;
+    width: 100%;
+    padding-left: 12px;
+  }
+}

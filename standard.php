@@ -4,6 +4,8 @@ session_start();
 $isLoggedIn = isset($_SESSION['user']);
 require_once "./Db.php";
 $db =new Database();
+// feature posts //
+$feature_posts=$db->getData("posts",'','posts.*', 'WHERE feature_post = 1');
 // Get the post ID from the URL
 $postId = $_GET['id'] ?? null;
 // echo "<pre>";
@@ -428,22 +430,24 @@ if ($postId) {
           <div class="life-style-sidebar">
             <div class="sidebar-widget featured-post">
               <h6>Featured Post</h6>
+              <?php foreach($feature_posts as $feature_post): ?>
               <div class="recent-post mb-20">
                 <div class="recent-post-img">
                   <a href="standard-formate.html"
-                    ><img src="images/sidebar-img1.png" alt=""
+                    ><img src="<?php echo str_repeat('../', substr_count($feature_post['image'], '/')) . 'images/' . basename($feature_post['image']); ?>" alt=""
                   /></a>
                 </div>
                 <div class="recent-post-content">
-                  <a href="life-style.html">05 January, 2024</a>
+                  <a href="life-style.html"><?php echo date('d F Y', strtotime($feature_post['created_at'])); ?></a>
                   <h5>
                     <a href="standard-formate.html"
-                      >A Guide to Better Sleep Habits.</a
+                      ><?php echo htmlspecialchars($feature_post['title']); ?></a
                     >
                   </h5>
                 </div>
               </div>
-              <div class="recent-post mb-20">
+              <?php endforeach; ?>
+              <!-- <div class="recent-post mb-20">
                 <div class="recent-post-img">
                   <a href="standard-formate.html"
                     ><img src="images/sidebar-img2.png" alt=""
@@ -487,7 +491,7 @@ if ($postId) {
                     >
                   </h5>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="sidebar-widget discover-post mt-5">
