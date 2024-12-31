@@ -58,10 +58,12 @@ class Database{
             return "Table does not exist.";
         }
         // Generate slug if a "name" field exists
+        if ($table !== 'comment') {
         if (isset($data['name'])) {
             $data['slug'] = $this->generateSlug($data['name']);
-        }elseif(isset($data['title'])){
-        $data['slug'] = $this->generateSlug($data['title']);
+        } elseif (isset($data['title'])) {
+            $data['slug'] = $this->generateSlug($data['title']);
+        }
     }
         $columns = implode(", ", array_keys($data));
         $placeholders = implode(", ", array_fill(0, count($data), '?'));

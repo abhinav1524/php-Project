@@ -56,6 +56,7 @@ a {
 }
 .footer {
   bottom: 0;
+  padding-top: 22px;
 }
 .swiper-container {
   width: 100%; /* Full width */
@@ -1288,7 +1289,7 @@ input {
   width: 100%;
   border-radius: 5px;
   background: #fff;
-  color: var(--dark-text-color2);
+  color: var(--dark-text-color);
   border: 1px solid #eee;
   outline: none;
   font-size: 16px;

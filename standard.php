@@ -32,6 +32,17 @@ if ($postId) {
     echo "Invalid post ID.";
     exit;
 }
+// if (isset($_SESSION["error"])) {
+//     echo "<pre>";
+//     print_r($_SESSION["error"]);
+//     unset($_SESSION['error']);
+//     exit;
+// }
+$comments = $db->getData("comment","");
+// echo "<pre>";
+// print_r($comments);
+// die();
+// echo "</pre>";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -265,9 +276,10 @@ if ($postId) {
                 <div class="col-lg-12">
                   <div class="comment-area mb-60">
                     <div class="comment-title">
-                      <h4>Comments (02)</h4>
+                      <h4>Comments (<?php echo (count($comments) < 9 ? '0' : '') . count($comments); ?>)</h4>
                     </div>
                     <ul class="comment">
+                      <?php foreach($comments as $comment): ?>
                       <li>
                         <div class="single-comment-area">
                           <div class="author-img">
@@ -275,10 +287,10 @@ if ($postId) {
                           </div>
                           <div class="comment-content">
                             <div class="author-name-deg">
-                              <h6>Mr. Bowmik Haldar,</h6>
-                              <span>02 March, 2024</span>
+                              <h6><?php echo htmlspecialchars($comment['name']); ?>,</h6>
+                              <span><?php echo date('d F Y', strtotime($comment['created_at'])); ?></span>
                             </div>
-                            <p>Great! Have to learn more.</p>
+                            <p><?php echo htmlspecialchars($comment['comment']); ?> .</p>
                             <div class="replay-btn">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -300,10 +312,10 @@ if ($postId) {
                               </div>
                               <div class="comment-content">
                                 <div class="author-name-deg">
-                                  <h6>Jacoline Juie,</h6>
-                                  <span>05 March, 2024</span>
+                                  <h6><?php echo htmlspecialchars($comment['name']); ?>,</h6>
+                                  <span><?php echo date('d F Y', strtotime($comment['created_at'])); ?></span>
                                 </div>
-                                <p>Take Love Brothers!</p>
+                                <p><?php echo htmlspecialchars($comment['comment']); ?> !</p>
                               </div>
                             </div>
                           </li>
@@ -350,6 +362,7 @@ if ($postId) {
                           </li>
                         </ul>
                       </li>
+                      <?php endforeach; ?>
                     </ul>
                   </div>
                 </div>
@@ -360,12 +373,12 @@ if ($postId) {
                     <div class="title">
                       <h4>Leave Your Comment:</h4>
                     </div>
-                    <form>
+                    <form method="post" action="comment/comment.php">
                       <div class="row">
                         <div class="col-md-6">
                           <div class="form-inner mb-20">
                             <label>Your Name* :</label>
-                            <input type="text" placeholder="Jackson Mile" />
+                            <input type="text" name="name" placeholder="Jackson Mile" />
                           </div>
                         </div>
                         <div class="col-md-6">
@@ -373,6 +386,7 @@ if ($postId) {
                             <label>Your Email* :</label>
                             <input
                               type="email"
+                              name="email"
                               placeholder="example@gamil.com" />
                           </div>
                         </div>
@@ -380,6 +394,7 @@ if ($postId) {
                           <div class="form-inner mb-15">
                             <label>Your Comments*</label>
                             <textarea
+                              name="comment"
                               placeholder="Write Something..."></textarea>
                           </div>
                         </div>
@@ -401,7 +416,10 @@ if ($postId) {
                         <button
                           class="primary-btn1"
                           data-text="Post Comment"
-                          type="submit">
+                          type="submit"
+                          name="insert" 
+                          value="true"
+                          >
                           <span>
                             <svg
                               class="arrow"
