@@ -1424,7 +1424,62 @@ input {
 .blog-post {
   transition: all 0.3s ease;
 }
-
+.reply-btn {
+  outline: none !important;
+  border: none !important;
+  background-color: transparent;
+  font-size: 18px;
+}
+.bg-dark .reply-btn {
+  outline: none !important;
+  background-color: transparent;
+  font-size: 18px;
+  color: var(--white-color);
+}
+.reply-form-container {
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 10px;
+}
+.reply {
+  width: 305px;
+  max-height: 200px; /* Set a max height for the form */
+  overflow: hidden;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid var(--dark-text-color);
+  color: var(--dark-text-color);
+  font-weight: 400;
+}
+.bg-dark .reply {
+  width: 305px;
+  max-height: 200px; /* Set a max height for the form */
+  overflow: hidden;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid var(--white-color);
+  color: var(--white-color);
+}
+.submit-reply-btn {
+  text-align: center;
+  background: transparent;
+  outline: none !important;
+  border: none;
+  font-size: 20px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.bg-dark .submit-reply-btn {
+  color: var(--white-color);
+  text-align: center;
+  background: transparent;
+  outline: none !important;
+  border: none;
+  font-size: 20px;
+  margin-left: 10px;
+}
 @media (max-width: 768px) {
   .banner-btn-group {
     display: none;
@@ -1432,11 +1487,27 @@ input {
   .slider-btn-groups {
     display: none;
   }
+  .post-heading {
+    font-size: 42px;
+  }
 }
 @media (max-width: 375px) {
   .search_bar {
     max-width: 338px;
     width: 100%;
     padding-left: 12px;
+  }
+  .post-heading {
+    font-size: 42px;
+  }
+}
+@media (max-width: 375px) {
+  .search_bar {
+    max-width: 338px;
+    width: 100%;
+    padding-left: 12px;
+  }
+  .post-heading {
+    font-size: 35px;
   }
 }
