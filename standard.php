@@ -61,8 +61,11 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
         return;
     }
     // Start the unordered list
-    echo $isReply ? '<ul class="comment-replay">' : '<ul class="comment">';
-
+    echo $isReply ? '<ul class="comment-replay" data-parent-id="' . htmlspecialchars($parentId) . '">' : '<ul class="comment">';
+    $post_id = $_GET['id'] ?? null;
+    $userName="";
+    $userEmail="";
+    $isLoggedIn = isset($_SESSION['user']);
     foreach ($groupedComments[$parentId] as $comment) {
         ?>
         <li>
@@ -82,12 +85,27 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
                         <span><?php echo date('d F Y', strtotime($comment['created_at'])); ?></span>
                     </div>
                     <p><?php echo htmlspecialchars($comment['comment']); ?>.</p>
+                    <?php if ($isLoggedIn): ?>
                     <div class="replay-btn">
                         <button class="reply-btn" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>">Reply</button>
                     </div>
+                    <?php endif; ?>
                     <div class="reply-form-container" style="display: none;" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>">
-                        <textarea class="reply" name="reply" placeholder="Write your reply..."></textarea>
-                        <button class="submit-reply-btn" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>"><i class="fa-solid fa-paper-plane"></i></button>
+                      <?php
+                  if (isset($_SESSION['user'])) {
+                      $userName = $_SESSION['user']['name'];
+                      $userEmail = $_SESSION['user']['email'];
+                  }
+                  ?>
+                        <!-- <div class="post_id" data-post-id="" data-user-name="" data-user-email=""></div> -->
+                        <form id="reply_form" method="post" action="comment/comment.php">
+                        <input type="hidden" id="name" name="post_id" value="<?php echo htmlspecialchars($post_id); ?>"/>
+                        <input type="hidden" id="userName" name="userName" value="<?php echo htmlspecialchars($userName); ?>"/>
+                        <input type="hidden" id="userEmail" name="userEmail" value="<?php echo htmlspecialchars($userEmail); ?>"/>
+                        <input type="hidden"id="parent_id" name="parent_id" value="<?php echo htmlspecialchars($comment['id']); ?>"/>
+                        <textarea class="reply" id="reply" name="reply" placeholder="Write your reply..."></textarea>
+                        <button type="submit" class="submit-reply-btn" id="submitForm" name="submitReply" value="true"><i class="fa-solid fa-paper-plane"></i></button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -378,6 +396,11 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
                             <textarea
                               name="comment"
                               placeholder="Write Something..."></textarea>
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="form-inner mb-15">
+                            <input type="hidden" name="post_id" value="<?php echo htmlspecialchars($postId); ?>">
                           </div>
                         </div>
                         <div class="col-md-12">

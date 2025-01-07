@@ -434,50 +434,25 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
-
-  // Submit reply
-  document.querySelectorAll(".submit-reply-btn").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      const commentId = this.getAttribute("data-comment-id");
-      const replyText = document.querySelector(
-        `.reply-form-container[data-comment-id="${commentId}"] textarea`
-      ).value;
-
-      // Send AJAX request to save the reply
-      fetch("/save-reply", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ comment_id: commentId, reply: replyText }),
+  // submit reply code //
+  document.getElementById("submitForm").addEventListener("click", function (e) {
+    e.preventDefault();
+    const form = document.getElementById("reply_form");
+    console.log(form);
+    const formData = new FormData(form); // Collect all form data, including dynamic value
+    console.log(formData);
+    fetch("comment/comment.php", {
+      // Send data to this PHP file
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.text())
+      .then((data) => {
+        console.log(data);
+        // document.getElementById("response").innerHTML = data; // Display server response
       })
-        .then((response) => response.json())
-        .then((data) => {
-          // Append the new reply to the DOM
-          if (data.success) {
-            const newReplyHTML = `
-              <li>
-                <div class="single-comment-area">
-                  <div class="author-img">
-                    <img src="path-to-avatar" alt="User Avatar" />
-                  </div>
-                  <div class="comment-content">
-                    <div class="author-name-deg">
-                      <h6>${data.user.name},</h6>
-                      <span>${data.created_at}</span>
-                    </div>
-                    <p>${data.comment}</p>
-                    <div class="edit-btn" data-comment-id="${data.id}">Edit</div>
-                    <div class="delete-btn" data-comment-id="${data.id}">Delete</div>
-                  </div>
-                </div>
-              </li>
-            `;
-            document.querySelector(
-              `.comment-reply[data-parent-id="${commentId}"]`
-            ).innerHTML += newReplyHTML;
-          }
-        });
-    });
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   });
 });
