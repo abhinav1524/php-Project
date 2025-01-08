@@ -434,25 +434,65 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
-  // submit reply code //
-  document.getElementById("submitForm").addEventListener("click", function (e) {
-    e.preventDefault();
-    const form = document.getElementById("reply_form");
-    console.log(form);
-    const formData = new FormData(form); // Collect all form data, including dynamic value
-    console.log(formData);
-    fetch("comment/comment.php", {
-      // Send data to this PHP file
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.text())
-      .then((data) => {
-        console.log(data);
-        // document.getElementById("response").innerHTML = data; // Display server response
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+});
+
+// javascript to handle the edit button click to show and hide the form//
+document.addEventListener("DOMContentLoaded", function () {
+  // Toggle reply form display
+  document.querySelectorAll(".repy_edit").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      const commentId = this.getAttribute("data-comment-id");
+      const replyForm = document.querySelector(
+        `.update-form-container[data-comment-id="${commentId}"]`
+      );
+
+      if (replyForm) {
+        replyForm.style.display =
+          replyForm.style.display === "none" ? "flex" : "none";
+      }
+    });
+  });
+});
+
+// ajax call to delete the comment
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".reply_delete").forEach((button) => {
+    button.addEventListener("click", function () {
+      var commentId = this.getAttribute("data-comment-id");
+      var parentId = this.getAttribute("data-parent-id");
+
+      if (confirm("Are you sure you want to delete this comment?")) {
+        // Perform the DELETE request using Fetch API
+        fetch("comment/comment.php", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ comment_id: commentId, parent_id: parentId }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              alert(data.message); // Success message
+              // Optionally, remove the comment element from the DOM
+              var commentElement = document.querySelector(
+                `.comment[data-comment-id="${commentId}"]`
+              );
+              if (commentElement) {
+                commentElement.remove();
+              }
+              location.reload();
+            } else {
+              alert(data.error); // Error message
+            }
+          })
+          .catch((error) => {
+            alert("An error occurred: " + error.message);
+          });
+      } else {
+        // User canceled the deletion
+        alert("Comment deletion was canceled.");
+      }
+    });
   });
 });

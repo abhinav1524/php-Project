@@ -120,10 +120,15 @@ class Database{
     $whereValue = $this->conn->real_escape_string($where[$whereKey]);
 
     // Generate slug from the name and add it to the $data array
-    if (isset($data['name'])) {
-        $data['slug'] = $this->generateSlug($data['name']);
-    }elseif(isset($data['title'])){
-        $data['slug'] = $this->generateSlug($data['title']);
+        $excludeSlugTables = ['comment', 'another_table_without_slug']; // Add table names to exclude
+    if (!in_array($table, $excludeSlugTables)) {
+        if (!isset($data['slug'])) { // Only generate slug if it is not already set
+            if (isset($data['name'])) {
+                $data['slug'] = $this->generateSlug($data['name']);
+            } elseif (isset($data['title'])) {
+                $data['slug'] = $this->generateSlug($data['title']);
+            }
+        }
     }
     $updates = [];
     foreach ($data as $column => $value) {
@@ -148,6 +153,16 @@ public function delete($table, $where) {
         return "Record deleted successfully";
     } else {
         return "Error deleting record: " . $this->conn->error;
+    }
+}
+public function deleteAllChildren($table, $parentId) {
+$table = $this->conn->real_escape_string($table);
+    $parentId = intval($parentId);
+    $query = "DELETE FROM `$table` WHERE `parent_id` = '$parentId'";
+    if ($this->conn->query($query)) {
+        return "Record deleted successfully";
+    } else {
+        return "Error deleting records: " . $this->conn->error;
     }
 }
     public function getConnection(){

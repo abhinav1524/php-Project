@@ -84,28 +84,44 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
                         <h6><?php echo htmlspecialchars($comment['name']); ?>,</h6>
                         <span><?php echo date('d F Y', strtotime($comment['created_at'])); ?></span>
                     </div>
-                    <p><?php echo htmlspecialchars($comment['comment']); ?>.</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p><?php echo htmlspecialchars($comment['comment']); ?>.</p>
+                        <div class="button_container">
+                          <button class="repy_edit" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>"><i class="fa-regular fa-pen-to-square"></i></button>
+                          <button class="reply_delete" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>" data-parent-id="<?php echo htmlspecialchars($comment['parent_id']); ?>"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                </div>
                     <?php if ($isLoggedIn): ?>
                     <div class="replay-btn">
                         <button class="reply-btn" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>">Reply</button>
                     </div>
                     <?php endif; ?>
                     <div class="reply-form-container" style="display: none;" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>">
-                      <?php
-                  if (isset($_SESSION['user'])) {
-                      $userName = $_SESSION['user']['name'];
-                      $userEmail = $_SESSION['user']['email'];
-                  }
-                  ?>
-                        <!-- <div class="post_id" data-post-id="" data-user-name="" data-user-email=""></div> -->
-                        <form id="reply_form" method="post" action="comment/comment.php">
-                        <input type="hidden" id="name" name="post_id" value="<?php echo htmlspecialchars($post_id); ?>"/>
-                        <input type="hidden" id="userName" name="userName" value="<?php echo htmlspecialchars($userName); ?>"/>
-                        <input type="hidden" id="userEmail" name="userEmail" value="<?php echo htmlspecialchars($userEmail); ?>"/>
-                        <input type="hidden"id="parent_id" name="parent_id" value="<?php echo htmlspecialchars($comment['id']); ?>"/>
-                        <textarea class="reply" id="reply" name="reply" placeholder="Write your reply..."></textarea>
-                        <button type="submit" class="submit-reply-btn" id="submitForm" name="submitReply" value="true"><i class="fa-solid fa-paper-plane"></i></button>
-                        </form>
+                          <?php
+                      if (isset($_SESSION['user'])) {
+                          $userName = $_SESSION['user']['name'];
+                          $userEmail = $_SESSION['user']['email'];
+                      }
+                      ?>
+                      <form method="post" action="comment/comment.php">
+                      <input type="hidden" id="name" name="post_id" value="<?php echo htmlspecialchars($post_id); ?>"/>
+                      <input type="hidden" id="userName" name="userName" value="<?php echo htmlspecialchars($userName); ?>"/>
+                      <input type="hidden" id="userEmail" name="userEmail" value="<?php echo htmlspecialchars($userEmail); ?>"/>
+                      <input type="hidden"id="parent_id" name="parent_id" value="<?php echo htmlspecialchars($comment['id']); ?>"/>
+                      <textarea class="reply" id="reply" name="reply" placeholder="Write your reply..."></textarea>
+                      <button type="submit" class="submit-reply-btn" id="submitForm" name="submitReply" value="true"><i class="fa-solid fa-paper-plane"></i></button>
+                      </form>
+                    </div>
+                    <div class="update-form-container" style="display: none;" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>">
+                      <form method="post" action="comment/comment.php">
+                          <input type="hidden" name="comment_id" value="<?php echo htmlspecialchars($comment['id']); ?>">
+                          <input type="hidden" name="post_id" value="<?php echo htmlspecialchars($post_id); ?>">
+                          <input type="hidden" name="userName" value="<?php echo htmlspecialchars($userName); ?>">
+                          <input type="hidden" name="userEmail" value="<?php echo htmlspecialchars($userEmail); ?>">
+                          <input type="hidden" name="parent_id" value="<?php echo htmlspecialchars($comment['parent_id']?? 0); ?>">
+                          <textarea class="reply" name="updated_comment" placeholder="Edit your comment"><?php echo htmlspecialchars($comment['comment']); ?></textarea>
+                          <button type="submit" class="submit-reply-btn" name="updateReplyComment" value="true"><i class="fa-solid fa-paper-plane"></i></</button>
+                      </form>
                     </div>
                 </div>
             </div>

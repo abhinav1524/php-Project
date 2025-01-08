@@ -1484,6 +1484,27 @@ input {
 .post_id {
   display: none;
 }
+.button_container {
+  margin-left: 20px;
+}
+.update-form-container {
+  margin-top: 10px;
+}
+.repy_edit {
+  outline: none !important;
+  border: none !important;
+  background-color: transparent;
+  font-size: 18px;
+  color: yellow;
+  margin: 0px 10px;
+}
+.reply_delete {
+  outline: none !important;
+  border: none !important;
+  background-color: transparent;
+  font-size: 18px;
+  color: red;
+}
 @media (max-width: 768px) {
   .banner-btn-group {
     display: none;
