@@ -155,16 +155,6 @@ public function delete($table, $where) {
         return "Error deleting record: " . $this->conn->error;
     }
 }
-public function deleteAllChildren($table, $parentId) {
-$table = $this->conn->real_escape_string($table);
-    $parentId = intval($parentId);
-    $query = "DELETE FROM `$table` WHERE `parent_id` = '$parentId'";
-    if ($this->conn->query($query)) {
-        return "Record deleted successfully";
-    } else {
-        return "Error deleting records: " . $this->conn->error;
-    }
-}
     public function getConnection(){
         return $this->conn;
     }

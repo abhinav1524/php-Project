@@ -137,13 +137,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     // Read and decode the raw JSON input
     $data = json_decode(file_get_contents('php://input'), true);
     // Validate the 'id'
-    if (!isset($data['comment_id']) || empty($data['comment_id']) || !isset($data['parent_id']) || empty($data['parent_id'])) {
+    if (!isset($data['comment_id']) || empty($data['comment_id'])) {
         echo json_encode(['success' => false, 'error' => 'Comment ID or Parent ID is missing or invalid.']);
         exit();
     }
     // $currentUserId = $_SESSION['user']['id'];
     $commentId = intval($data['comment_id']); // Ensuring ID is treated as an integer
-    $parentId = intval($data['parent_id']);
     $db = new Database();
     $comment = $db->getData('comment', null, '*', "WHERE id = $commentId")[0];
      if ($comment) {

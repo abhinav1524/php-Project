@@ -459,20 +459,14 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".reply_delete").forEach((button) => {
     button.addEventListener("click", function () {
       var commentId = this.getAttribute("data-comment-id");
-      var parentId = this.getAttribute("data-parent-id");
-      if (parentId === "") {
-        parentId = null; // Convert empty string to null
-      }
       if (confirm("Are you sure you want to delete this comment?")) {
-        console.log(commentId);
-        console.log(parentId);
         // Perform the DELETE request using Fetch API
         fetch("comment/comment.php", {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ comment_id: commentId, parent_id: parentId }),
+          body: JSON.stringify({ comment_id: commentId }),
         })
           .then((response) => response.json())
           .then((data) => {

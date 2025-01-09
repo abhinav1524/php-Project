@@ -91,7 +91,7 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
                         <?php if ($isOwner): ?>
                         <div class="button_container">
                           <button class="repy_edit" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>"><i class="fa-solid fa-pen-to-square"></i></button>
-                          <button class="reply_delete" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>" data-parent-id="<?php echo htmlspecialchars($comment['parent_id']); ?>"><i class="fa-solid fa-trash"></i></button>
+                          <button class="reply_delete" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>"><i class="fa-solid fa-trash"></i></button>
                         </div>
                       <?php endif; ?>
                 </div>
