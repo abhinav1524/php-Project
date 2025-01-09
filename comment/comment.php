@@ -15,13 +15,19 @@ if($_SERVER["REQUEST_METHOD"]==="GET" && isset($_GET["fetchAll"])){
 }
 // insert code //
 if($_SERVER["REQUEST_METHOD"]=== "POST" && isset($_POST["insert"])){
+    // echo "<pre>";
+    // print_r($_POST);
+    // die();
+    // echo "</pre>";
     $db = new Database();
     $tableName ="comment";
-    $post_id =$_POST["post_id"??null];
+    $currentUserId = $_SESSION['user']['id'];
+    $post_id =$_POST["post_id"];
+    $parentId =null;
     $name=$_POST["name"]??'';
     $email=$_POST["email"]??'';
     $comment=$_POST["comment"]??'';
-    if(empty($post_id)||empty($name)|| empty($email)|| empty($comment)){
+    if(empty($post_id)||empty($name)|| empty($email)|| empty($comment) || empty($currentUserId)){
         $_SESSION['error']= "You cannot post empty comment";
         $currentPage = $_SERVER['HTTP_REFERER'];
         header("Location:$currentPage");
@@ -31,7 +37,9 @@ if($_SERVER["REQUEST_METHOD"]=== "POST" && isset($_POST["insert"])){
         "name"=>$name,
         "email"=>$email,
         "comment"=>$comment,
-        "post_id"=>$post_id
+        "post_id"=>$post_id,
+        "parent_id"=>$parentId,
+        "user_id"=>$currentUserId
     ];
     $result=$db->insert($tableName,$data);
     if($result==="Record inserted successfully"){
@@ -53,20 +61,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'&& isset($_POST["submitReply"])) {
     // echo "</pre>";
     $db = new Database();
     $tableName ="comment";
+    $currentUserId = $_SESSION['user']['id'];
     $postId = $_POST['post_id'];
-    $parentId =$_POST['parent_id']; // This can be 0 for a top-level comment
+    $parentId =$_POST['parent_id'??null]; // This can be 0 for a top-level comment
     $commentText = $_POST['reply'];
     $userName = $_POST['userName'];
     $userEmail = $_POST['userEmail'];
     // Validate input
-    if (empty($post_id) || empty($parent_id) || empty($userName) || empty($userEmail) || empty($reply)) {
+    if (empty($post_id) || empty($parent_id) || empty($userName) || empty($userEmail) || empty($reply) || empty($currentUserId)) {
         // Prepare the insert statement
         $data =[
         "name"=>$userName,
         "email"=>$userEmail,
         "comment"=>$commentText,
         "post_id"=>$postId,
-        "parent_id"=>$parentId
+        "parent_id"=>$parentId,
+        "user_id"=>$currentUserId
     ];
     $result=$db->insert($tableName,$data);
     if($result==="Record inserted successfully"){
@@ -89,9 +99,9 @@ if($_SERVER["REQUEST_METHOD"]==="POST"&& isset($_POST["updateReplyComment"])){
     // die();
     // echo "</pre>";
     $db = new Database();
+    $currentUserId = $_SESSION['user']['id'];
     $id=$_POST["comment_id"];
     $postId = $_POST['post_id'];
-    $parentId =$_POST['parent_id'??0]; // This can be 0 for a top-level comment
     $commentText = $_POST['updated_comment'];
     $userName = $_POST['userName'];
     $userEmail = $_POST['userEmail'];
@@ -99,10 +109,6 @@ if($_SERVER["REQUEST_METHOD"]==="POST"&& isset($_POST["updateReplyComment"])){
     if (empty($commentText)) {
         $_SESSION['error'] = "All fields are required.";
         $currentPage = $_SERVER['HTTP_REFERER'];
-        echo "<pre>";
-        print_r("validate condition is not  passed");
-        die();
-        echo "</pre>";
         header("Location:$currentPage");
         exit();
     } 
@@ -111,7 +117,7 @@ if($_SERVER["REQUEST_METHOD"]==="POST"&& isset($_POST["updateReplyComment"])){
         "email"=>$userEmail,
         "comment"=>$commentText,
         "post_id"=>$postId,
-        "parent_id"=>$parent_id
+        "user_id"=>$currentUserId
     ];
     $result=$db->update('comment',$data,["id"=>$id]);
     if ($result === "Record updated successfully") {
@@ -135,20 +141,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         echo json_encode(['success' => false, 'error' => 'Comment ID or Parent ID is missing or invalid.']);
         exit();
     }
+    // $currentUserId = $_SESSION['user']['id'];
     $commentId = intval($data['comment_id']); // Ensuring ID is treated as an integer
     $parentId = intval($data['parent_id']);
     $db = new Database();
-     if ($parentId == 0) {
-        // Parent comment - delete the comment and all child comments
-        $result = $db->deleteAllChildren('comment', $commentId); // Custom method to delete all child comments
+    $comment = $db->getData('comment', null, '*', "WHERE id = $commentId")[0];
+     if ($comment) {
+        if ($comment['parent_id'] === null) {
+            // Case 1: Delete parent comment and its children
+            $db->delete('comment', ['id' => $commentId]); // Delete the parent comment
+            $db->delete('comment', ['parent_id' => $commentId]); // Delete child comments
+        } else {
+            // Case 2: Delete only the child comment
+            $db->delete('comment', ['id' => $commentId]);
+        }
+        echo json_encode(['success' => true,'message'=>"Comment deleted successfully!"]);
     } else {
-        // Child comment - delete only the specific child comment
-        $result = $db->delete('comment', ['id' => $commentId]);
-    }
-    if ($result === "Record deleted successfully") {
-        echo json_encode(['success' => true, 'message' => 'Category deleted successfully.']);
-    } else {
-        echo json_encode(['success' => false, 'error' => $result]);
+        echo json_encode(['success' => false, 'error' => 'Comment not found!']);
     }
     exit();
 }

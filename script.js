@@ -460,8 +460,12 @@ document.addEventListener("DOMContentLoaded", function () {
     button.addEventListener("click", function () {
       var commentId = this.getAttribute("data-comment-id");
       var parentId = this.getAttribute("data-parent-id");
-
+      if (parentId === "") {
+        parentId = null; // Convert empty string to null
+      }
       if (confirm("Are you sure you want to delete this comment?")) {
+        console.log(commentId);
+        console.log(parentId);
         // Perform the DELETE request using Fetch API
         fetch("comment/comment.php", {
           method: "DELETE",
@@ -484,10 +488,12 @@ document.addEventListener("DOMContentLoaded", function () {
               location.reload();
             } else {
               alert(data.error); // Error message
+              console.log(data.error);
             }
           })
           .catch((error) => {
             alert("An error occurred: " + error.message);
+            // console.log(error.message);
           });
       } else {
         // User canceled the deletion

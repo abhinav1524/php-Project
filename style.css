@@ -1136,13 +1136,8 @@ input {
   padding: 29px 0 15px 0;
 }
 .bg-dark .comment-area .comment .comment-replay {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  margin-left: 70px;
   border-top: 1px solid #2f2f2f;
   border-bottom: 1px solid #2f2f2f;
-  padding: 29px 0 15px 0;
 }
 .comment-area .comment .comment-replay > li:last-child {
   margin-bottom: 0;
@@ -1486,6 +1481,7 @@ input {
 }
 .button_container {
   margin-left: 20px;
+  display: flex;
 }
 .update-form-container {
   margin-top: 10px;
@@ -1523,16 +1519,9 @@ input {
     padding-left: 12px;
   }
   .post-heading {
-    font-size: 42px;
-  }
-}
-@media (max-width: 375px) {
-  .search_bar {
-    max-width: 338px;
-    width: 100%;
-    padding-left: 12px;
-  }
-  .post-heading {
     font-size: 35px;
+  }
+  .comment-area .comment .comment-replay {
+    margin-left: 0px !important;
   }
 }

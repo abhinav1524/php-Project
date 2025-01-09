@@ -76,6 +76,8 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
                       $userEmail = $_SESSION['user']['email'];
                       $avatarUrl = generateRandomAvatar(md5($userEmail)); // Generate the avatar.
                       echo "<img src='{$avatarUrl}' alt='User Avatar'/>";
+                          $currentUserId = $_SESSION['user']['id'];
+                          $isOwner = $comment['user_id'] == $currentUserId;
                   }
                   ?>
                 </div>
@@ -86,10 +88,12 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
                     </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <p><?php echo htmlspecialchars($comment['comment']); ?>.</p>
+                        <?php if ($isOwner): ?>
                         <div class="button_container">
-                          <button class="repy_edit" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>"><i class="fa-regular fa-pen-to-square"></i></button>
+                          <button class="repy_edit" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>"><i class="fa-solid fa-pen-to-square"></i></button>
                           <button class="reply_delete" data-comment-id="<?php echo htmlspecialchars($comment['id']); ?>" data-parent-id="<?php echo htmlspecialchars($comment['parent_id']); ?>"><i class="fa-solid fa-trash"></i></button>
                         </div>
+                      <?php endif; ?>
                 </div>
                     <?php if ($isLoggedIn): ?>
                     <div class="replay-btn">
@@ -118,7 +122,7 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
                           <input type="hidden" name="post_id" value="<?php echo htmlspecialchars($post_id); ?>">
                           <input type="hidden" name="userName" value="<?php echo htmlspecialchars($userName); ?>">
                           <input type="hidden" name="userEmail" value="<?php echo htmlspecialchars($userEmail); ?>">
-                          <input type="hidden" name="parent_id" value="<?php echo htmlspecialchars($comment['parent_id']?? 0); ?>">
+                          <input type="hidden" name="parent_id" value="<?php echo htmlspecialchars($comment['parent_id']?? null); ?>">
                           <textarea class="reply" name="updated_comment" placeholder="Edit your comment"><?php echo htmlspecialchars($comment['comment']); ?></textarea>
                           <button type="submit" class="submit-reply-btn" name="updateReplyComment" value="true"><i class="fa-solid fa-paper-plane"></i></</button>
                       </form>
@@ -377,7 +381,7 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
                       <h4>Comments (<?php echo (count($comments) < 9 ? '0' : '') . count($comments); ?>)</h4>
                     </div>
                     <ul class="comment">
-                     <?php renderComments(0, $groupedComments); ?>
+                     <?php renderComments(null, $groupedComments); ?>
                     </ul>
                   </div>
                 </div>
