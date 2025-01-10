@@ -332,7 +332,7 @@ function displayPostTable(data, page) {
             <td style="background-color:transparent">${item.title}</td>
             <td style="background-color:transparent">${item.slug}</td>
             <td style="background-color:transparent">${item.author}</td>
-            <td style="background-color:transparent">${item.content}</td>
+            <td style="background-color:transparent">${item.description}</td>
             <td style="background-color:transparent">${item.category_name}</td>
             <td style="background-color:transparent"><img src ="${normalizedImagePath}" style="max-width: 80px; max-height:80px"/></td>
             <td style="background-color:transparent">

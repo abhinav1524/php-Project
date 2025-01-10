@@ -58,6 +58,11 @@ a {
   bottom: 0;
   padding-top: 22px;
 }
+#content {
+  height: 500px; /* Set the desired height */
+  max-height: 800px; /* Optional: Prevent it from growing too much */
+  overflow-y: auto;
+}
 .swiper-container {
   width: 100%; /* Full width */
   overflow: hidden; /* Hide the overflow */
@@ -972,7 +977,7 @@ input {
   border: none;
   outline: none;
 }
-.share-post-area .share-post-content .input-area #copy-link-icon {
+.share-post-area .share-post-content .input-area #copyPostLink {
   min-width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -983,7 +988,7 @@ input {
   transition: 0.35s;
   cursor: pointer;
 }
-.share-post-area .share-post-content .input-area #copy-link-icon svg {
+.share-post-area .share-post-content .input-area #copyPostLink svg {
   transition: 0.35s;
   fill: var(--white-color);
 }

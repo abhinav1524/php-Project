@@ -26,14 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['fetchAll'])) {
     $content =$_POST['content']??'';
     $category =$_POST['category']??'';
     $author =$_POST['author']??'';
+    $description =$_POST['descripton']??'';
     $image =$_FILES['image']??null;
     $feature_post = isset($_POST['feature_post']) ? 1 : 0;
-    // echo "<pre>";
-    // print_r($title);
-    // print_r($content);
-    // print_r($image);
-    // die();
-    // echo "</pre>";
     if(empty($title)||empty($content)||empty($image)){
         $_SESSION['error']= "all field is required";
         header("Location:./index.php");
@@ -52,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['fetchAll'])) {
             'content'=>$content,
             'category_id'=>$category,
             'author'=>$author,
+            'description'=>$description,
             'image'=>$targetFilePath,
             'feature_post' => $feature_post,
         ];
@@ -77,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
     $content = $_POST['content'] ?? '';
     $category = $_POST['category'] ?? '';
     $author = $_POST['author'] ?? '';
+    $description = $_POST['description'] ?? '';
     $image = $_FILES['image'] ?? null;
     $feature_post = isset($_POST['feature_post']) ? 1 : 0;
     
@@ -100,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
                 'content' => $content,
                 'category_id' => $category,
                 'author' => $author,
+                'description' => $description,
                 'image' => $targetFilePath,
                 'feature_post' => $feature_post,
             ];
@@ -116,6 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
             'content' => $content,
             'category_id' => $category,
             'author' => $author,
+            'description' => $description,
             'image' => $previousImage,  // Use the old image from the database
             'feature_post' => $feature_post,
         ];

@@ -56,6 +56,7 @@ if (!$categories) {
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.6/swiper-bundle.min.css" />
     <link rel="stylesheet" href="../../style.css" />
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
     <title>Update Post</title>
 </head>
 <body>
@@ -119,8 +120,13 @@ if (!$categories) {
                     <input type="text" style="" name="author" class="form-control" id="author" value="<?php echo htmlspecialchars($posts['author']); ?>"/>
                 </div>
                 <div class="mb-3">
+                    <label for="title" class="form-label">Descripiton</label>
+                    <input type="text" style="" name="description" class="form-control" id="description" value="<?php echo htmlspecialchars($posts['description']); ?>"/>
+                </div>
+                <div class="mb-3">
                     <label for="content" class="form-label">Content</label>
-                    <textarea type="text" name="content" class="form-control" id="content"><?php echo htmlspecialchars($posts['content']); ?></textarea>
+                    <div id="content"><?php echo htmlspecialchars($posts['content']); ?></div>
+                    <textarea type="text" name="content" style="display:none" class="form-control" id="hidden-content"><?php echo htmlspecialchars($posts['content']); ?></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="content" class="form-label">Category</label>
@@ -164,25 +170,31 @@ if (!$categories) {
             </div>
         </div>
     </div>
-<footer class="fixed-bottom">
-      <p class="text-center">all copyright reserve to Abhinav</p>
+<footer>
+    <p class="text-center">all copyright reserve to Abhinav</p>
     </footer>
-    <script src="https://cdn.tiny.cloud/1/r8jon8h8qgvna4rm62vzmjuf0g4qrgszc0ucjrcin7t3n4s0/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
     <script>
-  tinymce.init({
-    selector: '#content', // The ID of the textarea to convert into a rich text editor
-    plugins: 'advlist autolink lists link image charmap preview anchor',
-    toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-    height: 500,
-    menubar: false,
-     formats: {
-      h1: { block: 'h1' },
-      h2: { block: 'h2' },
-      h3: { block: 'h3' },
-      p: { block: 'p' }
-    }
-  });
-</script>
+      var quill = new Quill('#content', {
+        theme: 'snow', // or 'bubble'
+        modules: {
+          toolbar: [
+            [{ header: [1, 2, false] }],
+            ['bold', 'italic', 'underline'],
+            ['link', 'image']
+          ]
+        }
+      });
+       // Set initial content
+    var contentFromDatabase = <?php echo json_encode($posts['content']); ?>;
+    let sanitizedContent = contentFromDatabase.replace(/<span[^>]*>/g, '').replace(/<\/span>/g, '');
+    quill.root.innerHTML = sanitizedContent;
+
+    // Update hidden textarea on submit
+    document.querySelector('form').addEventListener('submit', function () {
+        document.getElementById('hidden-content').value = quill.root.innerHTML;
+    });
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.6/swiper-bundle.min.js"></script>
     <script src="../../script.js"></script>
     <script

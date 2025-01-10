@@ -2,29 +2,17 @@
 session_start(); 
 // Check if user is logged in
 $isLoggedIn = isset($_SESSION['user']);
-// echo "<pre>";
-// print_r($_SESSION['user']);
-// echo "</pre>";
-// die();
 require_once "./Db.php";
 $db =new Database();
 // feature posts //
 $feature_posts=$db->getData("posts",'','posts.*', 'WHERE feature_post = 1');
 // Get the post ID from the URL
 $postId = $_GET['id'] ?? null;
-// echo "<pre>";
-// print_r($postId);
-// die();
-// echo "</pre>";
 
 if ($postId) {
     // Fetch the post data from the database
     $join = "LEFT JOIN categories c ON posts.category_id = c.id";
     $post = $db->getData('posts', $join, 'posts.*,c.name AS category_name', "WHERE posts.id = $postId");
-    // echo "<pre>";
-    // print_r($post);
-    // die();
-    // echo "</pre>";
     // If post exists, display it
     if (!empty($post)) {
         $post = $post[0]; // Since getData returns an array of results
@@ -44,10 +32,6 @@ function generateRandomAvatar($hash) {
 }
 
 $comments = $db->getData("comment","WHERE post_id = $postId");
-// echo "<pre>";
-// print_r($comments);
-// die();
-// echo "</pre>";
 $groupedComments = [];
 if (!empty($comments)) {
     foreach ($comments as $comment) {
@@ -222,36 +206,7 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
             <div class="col-lg-10 mb-60">
               <div class="blog-content">
                 <?php echo $post['content']; ?>
-                <p>
-                  "Infinite Odyssey: Your Journey into Gaming Infinity" is a
-                  groundbreaking gaming experience that transcends traditional
-                  boundaries, offering players an infinite universe of
-                  exploration, discovery, and adventure.
-                </p>
-                <p>
-                  In this game, players embark on an
-                  <a class="text" href="#">Epic Journey</a>
-                  through a vast and ever-expanding multiverse of interconnected
-                  worlds, each with its own unique challenges, mysteries, and
-                  wonders.players have the opportunity to establish their own
-                  thriving economies, trading goods and services with other
-                  pioneers and NPCs (non-player characters). Whether they're
-                  farming crops, crafting rare items, or running their own shops
-                  and businesses, players can earn wealth and prestige in the
-                  world of Pixel Pioneers.
-                </p>
-                <h3>Endless Exploration</h3>
-                <p>
-                  Players are free to chart their own course through the vast
-                  expanse of the multiverse, uncovering hidden secrets, forging
-                  alliances strange civilizations.
-                </p>
-                <p>
-                  The narrative of Infinite Odyssey is shaped by the actions and
-                  choices of the players, with branching storylines, dynamic
-                  events, and emergent gameplay
-                </p>
-                <blockquote>
+                <!-- <blockquote>
                   <p>
                     The universe of
                     <a class="text" href="#">"Infinite Odyssey"</a> is filled
@@ -263,7 +218,7 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
                   <div class="author-name">
                     <span>Dr. Samuel Nathan</span>
                   </div>
-                </blockquote>
+                </blockquote> -->
               </div>
               <div class="mt-5">
                 <a href="#" class="add-image">
@@ -354,10 +309,10 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
                       </ul>
                       <div class="input-area" id="inviteCode">
                         <input
-                          id="link-input"
-                          value="https://www.egenstheme.com/"
+                          id="postLink"
+                          value=""
                           readonly="" />
-                        <div id="copy-link-icon">
+                        <button type="button" id="copyPostLink">
                           <svg
                             width="16"
                             height="16"
@@ -368,8 +323,8 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
                               clip-rule="evenodd"
                               d="M6.97324 10.9956C6.99524 11.0066 7.02724 11.0066 7.02724 11.0066V11.0286C7.06024 11.0286 7.12424 10.9846 7.12424 10.9846L8.29028 9.82042L8.32328 9.78845C8.35314 9.76404 8.37852 9.73462 8.39828 9.70151C8.42028 9.65854 8.43028 9.61457 8.40828 9.5716C8.38828 9.52863 8.35528 9.48566 8.31228 9.48566C7.87035 9.39014 7.46545 9.1691 7.14624 8.84912C6.76572 8.47567 6.53189 7.97821 6.48723 7.44712C6.45456 7.1118 6.49673 6.77341 6.61069 6.45634C6.72464 6.13926 6.90755 5.85138 7.14624 5.61343L10.2003 2.55962C11.0634 1.69624 12.5744 1.69624 13.4384 2.55962C13.8704 3.0023 14.1084 3.57389 14.1084 4.18845C14.1084 4.80301 13.8704 5.3856 13.4384 5.81729L12.0464 7.1983C12.0306 7.21556 12.0193 7.23645 12.0136 7.25912C12.0078 7.28178 12.0077 7.30551 12.0134 7.32821C12.1434 7.79088 12.2184 8.27653 12.2184 8.76218C12.2184 8.99901 12.2084 9.20387 12.1754 9.37674C12.1754 9.4307 12.1974 9.49566 12.2514 9.51664C12.2768 9.532 12.3066 9.53828 12.3361 9.53447C12.3655 9.53066 12.3928 9.51697 12.4134 9.49566L14.7775 7.14434C16.4075 5.50451 16.4075 2.85041 14.7775 1.22158C13.9921 0.43928 12.9283 0 11.8194 0C10.7104 0 9.6467 0.43928 8.86129 1.22158L5.80721 4.27539C5.5372 4.5452 5.32219 4.83699 5.16019 5.12778L5.14719 5.13778C5.13719 5.14577 5.12718 5.15276 5.12718 5.15976C4.79591 5.74751 4.61115 6.40632 4.58852 7.0805C4.56589 7.75467 4.70606 8.42438 4.99718 9.03299C5.20319 9.45269 5.46219 9.83042 5.80721 10.1762C6.14221 10.5209 6.54123 10.8017 6.97324 10.9956ZM1.23107 14.7709C2.0501 15.5803 3.12013 15.99 4.18816 15.99L4.15616 16C5.22419 16 6.30422 15.5903 7.11424 14.7819L10.1683 11.7291C10.727 11.1773 11.1165 10.4777 11.2914 9.7125L11.3564 9.23784C11.3774 9.12992 11.3774 9.02199 11.3774 8.91407V8.48338C11.3774 8.37446 11.3674 8.26654 11.3454 8.1806C11.3354 8.06168 11.3134 7.96475 11.2914 7.86782C11.2664 7.74735 11.234 7.62854 11.1944 7.51208C11.0008 6.87575 10.652 6.29748 10.1793 5.82928C9.84282 5.49624 9.45228 5.22256 9.0243 5.01986C8.9813 4.98788 8.87329 5.04184 8.87329 5.04184L7.70726 6.20601C7.67526 6.23899 7.63226 6.28196 7.59926 6.34591C7.57826 6.37889 7.57826 6.42186 7.59926 6.46582C7.62126 6.50879 7.65326 6.54077 7.69626 6.54077C8.13927 6.62671 8.53828 6.84256 8.86229 7.16632C9.29431 7.60901 9.53231 8.19159 9.52131 8.82713C9.51031 9.21685 9.41331 9.59359 9.2293 9.91635C9.17794 10.0094 9.11658 10.0965 9.0463 10.1762C9.0033 10.2411 8.9493 10.3161 8.86229 10.402L5.80721 13.4548C5.37361 13.8759 4.79279 14.1115 4.18816 14.1115C3.58352 14.1115 3.00271 13.8759 2.56911 13.4548C2.13942 13.0215 1.89858 12.436 1.89909 11.826C1.89909 11.2114 2.1371 10.6288 2.56911 10.1972L3.96215 8.80615C3.99415 8.76318 4.00515 8.70922 3.99415 8.66625C3.77779 8.01315 3.71483 7.31903 3.81015 6.6377C3.81488 6.60938 3.81008 6.58029 3.79651 6.55498C3.78294 6.52966 3.76136 6.50956 3.73515 6.4978C3.69214 6.46483 3.58414 6.51879 3.58414 6.51879L1.23007 8.85911C0.838368 9.24512 0.527785 9.70543 0.316558 10.213C0.105332 10.7206 -0.00228147 11.2653 3.66695e-05 11.815C3.66695e-05 12.9252 0.44305 13.9834 1.23007 14.7699L1.23107 14.7709Z"></path>
                           </svg>
-                        </div>
-                        <span id="copy-text" class="copy-text"></span>
+                        </button>
+                        <span  class="copy-text"></span>
                       </div>
                     </div>
                   </div>
@@ -600,6 +555,29 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
     <footer class="mt-5">
       <p class="text-center">all copyright reserve to Abhinav</p>
     </footer>
+    <script>
+      function getPostIdFromUrl() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var postId = urlParams.get('id');
+      return postId;
+      }
+      function updatePostLink() {
+        var postId = getPostIdFromUrl(); // Example post ID, you can capture this dynamically based on the post
+        var postLink = `http://localhost/Blog/standard.php?id=${postId}`;
+        document.getElementById('postLink').value = postLink;
+      }
+
+      // Call the function when the page loads or on relevant event
+      updatePostLink();
+      document.getElementById('copyPostLink').addEventListener('click', function() {
+      var postLink = document.getElementById('postLink').value;
+      navigator.clipboard.writeText(postLink).then(function() {
+        alert('Link copied to clipboard!');
+      }).catch(function(err) {
+        console.error('Failed to copy: ', err);
+      });
+    });
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.6/swiper-bundle.min.js"></script>
     <script src="script.js"></script>
     <script

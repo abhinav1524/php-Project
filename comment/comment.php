@@ -136,29 +136,37 @@ if($_SERVER["REQUEST_METHOD"]==="POST"&& isset($_POST["updateReplyComment"])){
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     // Read and decode the raw JSON input
     $data = json_decode(file_get_contents('php://input'), true);
+
     // Validate the 'id'
     if (!isset($data['comment_id']) || empty($data['comment_id'])) {
-        echo json_encode(['success' => false, 'error' => 'Comment ID or Parent ID is missing or invalid.']);
+        echo json_encode(['success' => false, 'error' => 'Comment ID is missing or invalid.']);
         exit();
     }
-    // $currentUserId = $_SESSION['user']['id'];
+
     $commentId = intval($data['comment_id']); // Ensuring ID is treated as an integer
     $db = new Database();
-    $comment = $db->getData('comment', null, '*', "WHERE id = $commentId")[0];
-     if ($comment) {
-        if ($comment['parent_id'] === null) {
-            // Case 1: Delete parent comment and its children
-            $db->delete('comment', ['id' => $commentId]); // Delete the parent comment
-            $db->delete('comment', ['parent_id' => $commentId]); // Delete child comments
-        } else {
-            // Case 2: Delete only the child comment
-            $db->delete('comment', ['id' => $commentId]);
+
+    // Recursive function to delete all child comments
+    function deleteNestedComments($db, $commentId) {
+        // Delete child comments first
+        $childComments = $db->getData('comment', null, '*', "WHERE parent_id = $commentId");
+        foreach ($childComments as $childComment) {
+            deleteNestedComments($db, $childComment['id']);
         }
-        echo json_encode(['success' => true,'message'=>"Comment deleted successfully!"]);
+
+        // Then delete the current(parent) comment
+        $db->delete('comment', ['id' => $commentId]);
+    }
+
+    $comment = $db->getData('comment', null, '*', "WHERE id = $commentId")[0];
+
+    if ($comment) {
+        deleteNestedComments($db, $commentId);
+        echo json_encode(['success' => true, 'message' => "Comment and all related comments deleted successfully!"]);
     } else {
         echo json_encode(['success' => false, 'error' => 'Comment not found!']);
     }
+
     exit();
 }
-
 ?>
