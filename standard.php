@@ -66,6 +66,7 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
     $userName="";
     $userEmail="";
     $isLoggedIn = isset($_SESSION['user']);
+    $isOwner="";
     foreach ($groupedComments[$parentId] as $comment) {
         ?>
         <li>
