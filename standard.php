@@ -442,7 +442,7 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
                 <div class="recent-post-content">
                   <a href="life-style.html"><?php echo date('d F Y', strtotime($feature_post['created_at'])); ?></a>
                   <h5>
-                    <a href="standard-formate.html"
+                    <a href="standard.php?id=<?php echo $feature_post['id']; ?>"
                       ><?php echo htmlspecialchars($feature_post['title']); ?></a
                     >
                   </h5>

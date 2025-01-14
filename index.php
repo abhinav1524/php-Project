@@ -77,7 +77,7 @@ $feature_posts=$db->getData("posts",'','posts.*', 'WHERE feature_post = 1');
     </header>
     <div class="container" style="margin-top: 90px">
       <!-- search bar section -->
-      <div class="d-flex justify-content-center align-items-center search_bar">
+      <!-- <div class="d-flex justify-content-center align-items-center search_bar">
         <form class="d-flex" role="search">
           <input
             class="form-control me-2"
@@ -86,7 +86,7 @@ $feature_posts=$db->getData("posts",'','posts.*', 'WHERE feature_post = 1');
             aria-label="Search" />
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
-      </div>
+      </div> -->
       <!-- image slider section -->
       <div class="mt-5">
         <div class="container">
@@ -251,7 +251,7 @@ $feature_posts=$db->getData("posts",'','posts.*', 'WHERE feature_post = 1');
                           <div class="other-content">
                             <a href="life-style.html"><?php echo date('d F Y', strtotime($post['created_at']));?></a>
                             <h6>
-                              <a href="standard.php"
+                              <a href="standard.php?id=<?php echo $post['id']; ?>"
                                 ><?php echo htmlspecialchars($post['title']); ?></a
                               >
                             </h6>
@@ -441,7 +441,7 @@ $feature_posts=$db->getData("posts",'','posts.*', 'WHERE feature_post = 1');
                   <div class="recent-post-content">
                     <a href="life-style.html"><?php echo date('d F Y', strtotime($feature_post['created_at'])); ?></a>
                     <h5>
-                      <a href="standard.php"
+                      <a href="standard.php?id=<?php echo $feature_post['id']; ?>"
                         ><?php echo htmlspecialchars($feature_post['title']); ?></a
                       >
                     </h5>
