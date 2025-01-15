@@ -194,5 +194,13 @@ public function delete($table, $where) {
             return false;
         }
     }
+    // getting the activity of the blog post //
+    public function getResults($query, $params = []) {
+        $stmt = $this->conn->prepare($query);
+        $types = str_repeat('s', count($params)); // Assuming all values are strings for simplicity
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
 }
 ?>

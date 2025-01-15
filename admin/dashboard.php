@@ -1,7 +1,15 @@
 <?php 
 session_start(); 
+require_once '../Db.php';
 // Check if user is logged in
 $isLoggedIn = isset($_SESSION['user']);
+$db = new Database();
+$totalPosts =count($db->getData('posts'));
+$categories = count($db->getData('categories'));
+$activity = count($db->getData('user_activity'));
+// echo "<pre>";
+// print_r($totalPosts);
+// die();
 ?> 
 <!DOCTYPE html>
 <html lang="en">
@@ -68,13 +76,45 @@ $isLoggedIn = isset($_SESSION['user']);
         </div>
       </nav>
     </header>
-    <div class="container" style="margin-top:100px">
-        <h1>this is the dashboard of admin</h1>
+ <div class="container mt-100">
+        <!-- Welcome Banner -->
+        <div class="alert alert-primary text-center shadow">
+            <h1>Welcome Back, Admin!</h1>
+            <p>Here's a quick overview of your blog performance today.</p>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="row text-center">
+            <div class="col-md-4 mb-3">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Posts</h5>
+                        <h2 class="text-primary"><?php echo $totalPosts?></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <h5 class="card-title">Active Users</h5>
+                        <h2 class="text-success"><?php echo $activity?></h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card shadow border-0">
+                    <div class="card-body">
+                        <h5 class="card-title">Categories</h5>
+                        <h2 class="text-warning"><?php echo $categories?></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
     <footer class="fixed-bottom">
       <p class="text-center">all copyright reserve to Abhinav</p>
     </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/8.4.6/swiper-bundle.min.js"></script>
     <script src="../script.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

@@ -125,7 +125,26 @@ function renderComments($parentId, $groupedComments, $isReply = false) {
     // Close the unordered list
     echo '</ul>';
 }
-// renderComments(null, $groupedComments);
+// tracking user activity //
+$action = "Visited Blog Post ID: $postId";
+recordUserActivity($action);
+// Function to record user activity
+function recordUserActivity($action) {
+  $userId = isset($_SESSION['user']['id']) ? $_SESSION['user']['id'] : null;
+  $db =new Database();
+  $tableName="user_activity";
+  $data=[
+    "user_id"=>$userId??null,
+    "action"=>$action
+  ];
+    $result=$db->insert($tableName,$data);
+    if ($result !== true) {
+        error_log("Error inserting user activity: $result"); // Log error
+        return "An error occurred while recording your activity. Please try again.";
+    }
+    exit();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
