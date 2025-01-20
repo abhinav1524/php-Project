@@ -89,6 +89,18 @@ if ($user["role"] !== "admin") {
     </header>
      <div class="container" style="margin-top:100px">
         <h1 class="text-center text-capitalize">this is the Posts of admin</h1>
+        <div class=" mt-5 d-flex justify-content-center align-items-center search_bar">
+        <div class="d-flex">
+          <input
+            id="search"
+            class="form-control me-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+            value ="";
+            />
+        </div>
+      </div>
         <div class="d-flex justify-content-end mb-5">
           <a href="../post/create.php" class="btn btn-primary">
           Add Post
