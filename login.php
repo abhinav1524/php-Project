@@ -1,6 +1,14 @@
 <?php 
 session_start(); 
 ?>
+<?php
+// Display JavaScript alert if there are errors
+if (!empty($_SESSION['errors'])) {
+    $errorMessages = implode('\n', $_SESSION['errors']); // Convert array to a string
+    echo "<script>alert('$errorMessages');</script>";
+    unset($_SESSION['errors']); // Clear errors after displaying
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
