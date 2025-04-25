@@ -92,7 +92,7 @@ if ($user["role"] !== "admin") {
         <div class=" mt-5 d-flex justify-content-center align-items-center search_bar">
         <div class="d-flex">
           <input
-            id="search"
+            id="searchInput"
             class="form-control me-2"
             type="search"
             placeholder="Search"

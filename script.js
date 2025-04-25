@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+  let postData = []; // 👈 Place this at the top of your script.js
   const body = document.body;
   const navbar = document.getElementById("navbar");
   const toggleDarkMode = document.getElementById("toggleDarkMode");
@@ -293,14 +294,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // fetching the post data //
 async function fetchPostData() {
-  let postData = [];
+  postData = [];
   try {
     const response = await fetch(`../post/post.php?fetchAll=true`); // Fetch data from the backend
     if (!response.ok) {
       throw new Error("Failed to fetch data");
     }
     const jsonData = await response.json(); // Parse JSON response
-    console.log(jsonData); //
+    // console.log(jsonData); //
 
     if (jsonData.error) {
       console.error("Error:", jsonData.error);
@@ -495,4 +496,20 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+});
+
+// filter post using search box code .//
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("input", function () {
+  const query = searchInput.value.toLowerCase();
+  const filteredData = postData.filter(
+    (item) =>
+      item.title.toLowerCase().includes(query) ||
+      item.description.toLowerCase().includes(query)
+  );
+
+  currentPage = 1; // Reset to first page when filtering
+  displayPostTable(filteredData, currentPage);
+  setupPagination(filteredData); // Rebuild pagination for filtered results
 });
