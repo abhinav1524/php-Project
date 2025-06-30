@@ -101,15 +101,15 @@ if (!$categories) {
                 <form action="post.php" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
-                    <input type="text" style="" name="title" class="form-control" id="title"/>
+                    <input type="text"  name="title" class="form-control" id="title"/>
                 </div>
                 <div class="mb-3">
                     <label for="title" class="form-label">Author</label>
-                    <input type="text" style="" name="author" class="form-control" id="author"/>
+                    <input type="text"  name="author" class="form-control" id="author"/>
                 </div>
                 <div class="mb-3">
                     <label for="title" class="form-label">Descripiton</label>
-                    <input type="text" style="" name="description" class="form-control" id="description"/>
+                    <input type="text"  name="description" class="form-control" id="description"/>
                 </div>
                 <div class="mb-3">
                     <label for="content" class="form-label">Content</label>
