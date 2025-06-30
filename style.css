@@ -665,6 +665,9 @@ a {
   color: var(--text-color);
   border-bottom: 1px solid #eeeeee;
 }
+.bg-dark .post-meta li a.publish-date{
+color:var(--white-color)
+}
 .mb-60 {
   margin-bottom: 60px;
 }
@@ -1769,7 +1772,7 @@ input {
 }
 .bg-dark .icon svg {
   transition: 0.35s;
-  fill: var(--white-color);
+  fill: var(--dark-text-color);
 }
 .number {
   display: flex;

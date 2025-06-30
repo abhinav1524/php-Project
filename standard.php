@@ -144,7 +144,11 @@ function recordUserActivity($action) {
     }
     exit();
 }
-
+// Fetch previous and next post IDs
+$prevArr = $db->getData('posts', '', 'id', "WHERE id < $postId ORDER BY id DESC LIMIT 1");
+$nextArr = $db->getData('posts', '', 'id', "WHERE id > $postId ORDER BY id ASC LIMIT 1");
+$prev = $prevArr[0]['id'] ?? null;
+$next = $nextArr[0]['id'] ?? null;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -259,10 +263,18 @@ function recordUserActivity($action) {
               </div>
               <div class="post-btn">
                 <div class="privious-post-btn">
-                  <a href="#"> PREVIOUS POST</a>
+                  <?php if ($prev): ?>
+                  <a href="standard.php?id=<?php echo $prev ?>"> PREVIOUS POST</a>
+                  <?php else: ?>
+                    <a href="#" disabled> PREVIOUS POST</a>
+                  <?php endif; ?>
                 </div>
                 <div class="next-post-btn">
-                  <a href="#"> NEXT POST</a>
+                  <?php if ($next): ?>
+                  <a href="standard.php?id=<?php echo $next ?>"> NEXT POST</a>
+                  <?php else: ?>
+                  <a href="#" disabled> NEXT POST</a>
+                  <?php endif; ?>
                 </div>
               </div>
               <div class="share-post-area">

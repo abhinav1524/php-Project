@@ -383,7 +383,7 @@ $feature_posts=$db->getData("posts",'','posts.*', 'WHERE feature_post = 1');
                           <img src="<?php echo str_repeat('../', substr_count($post['image'], '/')) . 'images/' . basename($post['image']); ?>" alt="" />
                           </div>
                         </a>
-                        <a href="life-style.html"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
+                        <a href="#"><span><?php echo htmlspecialchars($post['category_name']); ?></span> </a>
                       </div>
                       <div class="blog-content">
                         <div class="author-area">
@@ -392,7 +392,7 @@ $feature_posts=$db->getData("posts",'','posts.*', 'WHERE feature_post = 1');
                               <a href="editor-profile.html"><?php echo htmlspecialchars($post['author']); ?></a>
                             </li>
                             <li>
-                              <a class="publish-date" href="life-style.html">
+                              <a class="publish-date" href="#">
                                 <svg
                                   width="6"
                                   height="6"
@@ -411,7 +411,7 @@ $feature_posts=$db->getData("posts",'','posts.*', 'WHERE feature_post = 1');
                           </ul>
                         </div>
                         <h5>
-                          <a href="standard.php"
+                          <a href="standard.php?id=<?php echo urlencode($post['id']); ?>"
                             ><?php echo htmlspecialchars($post['title']); ?></a
                           >
                         </h5>
