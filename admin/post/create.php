@@ -113,8 +113,8 @@ if (!$categories) {
                 </div>
                 <div class="mb-3">
                     <label for="content" class="form-label">Content</label>
-                    <div id="content"><?php echo htmlspecialchars($posts['content']); ?></div>
-                    <textarea type="text" name="content" style="display:none" class="form-control" id="hidden-content"><?php echo htmlspecialchars($posts['content']); ?></textarea>
+                    <div id="content"></div>
+                    <textarea type="text" name="content" style="display:none" class="form-control" id="hidden-content"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="content" class="form-label">Category</label>
@@ -161,7 +161,7 @@ if (!$categories) {
   }
 });
     // Set initial content
-    var contentFromDatabase = <?php echo json_encode($posts['content']); ?>;
+    var contentFromDatabase = "";
     let sanitizedContent = contentFromDatabase.replace(/<span[^>]*>/g, '').replace(/<\/span>/g, '');
     quill.root.innerHTML = sanitizedContent;
 

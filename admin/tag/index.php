@@ -100,7 +100,7 @@ if ($user["role"] !== "admin") {
       <tbody id="tag-table-body"></tbody>
     </table>
     <nav>
-      <ul class="pagination justify-content-center" id="pagination">
+      <ul class="pagination justify-content-center" id="pagination-tags">
         <!-- Pagination items will be inserted here dynamically -->
       </ul>
     </nav>

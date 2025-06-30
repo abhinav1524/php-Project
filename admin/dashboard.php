@@ -112,7 +112,7 @@ $activity = count($db->getData('user_activity'));
         </div>
     </div>
 
-    <footer class="fixed-bottom">
+    <footer class="fixed-bottom bg-dark">
       <p class="text-center">all copyright reserve to Abhinav</p>
     </footer>
     <script src="../script.js"></script>

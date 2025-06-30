@@ -1798,6 +1798,9 @@ input {
   line-height: 1;
   margin-bottom: 0;
 }
+.admin_navigation_btn{
+  margin-bottom:50px;
+}
 @media (max-width: 768px) {
   .banner-btn-group {
     display: none;

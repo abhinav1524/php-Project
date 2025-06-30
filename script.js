@@ -90,7 +90,7 @@ async function fetchCategoryData() {
 
     data = jsonData; // Assign the fetched data to the `data` variable
     displayTable(data, currentPage); // Display the first page of the data
-    setupPagination(data); // Set up pagination based on the fetched data
+    setupPagination(data,"categories"); // Set up pagination based on the fetched data
   } catch (error) {
     console.error("Error fetching data:", error);
   }
@@ -112,7 +112,7 @@ function displayTable(data, page) {
             <td style="background-color:transparent">${item.name}</td>
             <td style="background-color:transparent">${item.slug}</td>
             <td style="background-color:transparent">
-                <div class="d-flex justify-content-around align-items-center">
+                <div class="d-flex justify-content-around align-items-center pt-4">
                      <a href="update.php?id=${
                        item.id
                      }" class="btn btn-warning edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
@@ -171,26 +171,46 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Function to set up pagination
-function setupPagination(data) {
-  const pagination = document.getElementById("pagination");
+function setupPagination(data, type) {
+  let paginationElement;
+
+  if (type === "posts") {
+    paginationElement = document.getElementById("pagination-posts");
+  } else if (type === "categories") {
+    paginationElement = document.getElementById("pagination-categories");
+  } else if (type === "tags") {
+    paginationElement = document.getElementById("pagination-tags");
+  }
+
+  if (!paginationElement) return; // Avoid errors if the element is not found
+
   const totalPages = Math.ceil(data.length / rowsPerPage);
 
-  pagination.innerHTML = "";
+  paginationElement.innerHTML = "";
   for (let i = 1; i <= totalPages; i++) {
     const pageItem = `
-          <li class="page-item ${i === currentPage ? "active" : ""}">
-            <button class="page-link" onclick="changePage(${i})">${i}</button>
-          </li>
-        `;
-    pagination.innerHTML += pageItem;
+      <li class="page-item ${i === currentPage ? "active" : ""}">
+        <button class="page-link" onclick="changePage(${i}, '${type}')">${i}</button>
+      </li>
+    `;
+    paginationElement.innerHTML += pageItem;
   }
 }
 
+
 // Function to handle page changes
-function changePage(page) {
+function changePage(page,type) {
   currentPage = page;
-  displayTable(data, currentPage); // Display the new page
-  setupPagination(data); // Recreate pagination with the active page highlighted
+   if (type === "categories") {
+    displayTable(data, currentPage);
+    setupPagination(data, type);
+  } else if (type === "tags") {
+    displayTagTable(data, currentPage);
+    setupPagination(data, type);
+  } else if (type === "posts") {
+    displayPostTable(postData, currentPage);
+    setupPagination(postData, type);
+  }
 }
 
 // fetching the tag data //
@@ -212,7 +232,7 @@ async function fetchTagData() {
 
     tagData = jsonData; // Assign the fetched data to the `data` variable
     displayTagTable(tagData, currentPage); // Display the first page of the data
-    setupPagination(tagData); // Set up pagination based on the fetched data
+    setupPagination(tagData,"tags"); // Set up pagination based on the fetched data
   } catch (error) {
     console.error("Error fetching data:", error);
   }
@@ -234,7 +254,7 @@ function displayTagTable(data, page) {
             <td style="background-color:transparent">${item.name}</td>
             <td style="background-color:transparent">${item.slug}</td>
             <td style="background-color:transparent">
-                <div class="d-flex justify-content-around align-items-center">
+                <div class="d-flex justify-content-around align-items-center pt-4">
                      <a href="update.php?id=${
                        item.id
                      }" class="btn btn-warning edit-btn"><i class="fa-solid fa-pen-to-square"></i></a>
@@ -310,7 +330,7 @@ async function fetchPostData() {
 
     postData = jsonData; // Assign the fetched data to the `data` variable
     displayPostTable(postData, currentPage); // Display the first page of the data
-    setupPagination(postData); // Set up pagination based on the fetched data
+    setupPagination(postData,"posts"); // Set up pagination based on the fetched data
   } catch (error) {
     console.error("Error fetching data:", error);
   }
@@ -337,7 +357,7 @@ function displayPostTable(data, page) {
             <td style="background-color:transparent">${item.category_name}</td>
             <td style="background-color:transparent"><img src ="${normalizedImagePath}" style="max-width: 80px; max-height:80px"/></td>
             <td style="background-color:transparent">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center pt-4">
                      <a href="update.php?id=${
                        item.id
                      }" class="btn btn-warning edit-btn" style="margin-right:8px"><i class="fa-solid fa-pen-to-square"></i></a>

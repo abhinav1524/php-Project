@@ -121,8 +121,8 @@ if ($user["role"] !== "admin") {
       </thead>
       <tbody id="posts-table-body"></tbody>
     </table>
-    <nav>
-      <ul class="pagination justify-content-center" id="pagination">
+    <nav class="admin_navigation_btn">
+      <ul class="pagination justify-content-center" id="pagination-posts">
         <!-- Pagination items will be inserted here dynamically -->
       </ul>
     </nav>
